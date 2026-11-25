@@ -1,582 +1,2111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>INDIAN MARVELS — Interactive Indian Heritage Experience | WCE Sangli</title>
-  <meta name="description" content="INDIAN MARVELS: An interactive digital museum showcasing India's timeless contributions to architecture, engineering, astronomy, sculpture, science, and art. Indian Knowledge System (IKS) Project, Walchand College of Engineering, Sangli (2026–27)." />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%235C1420'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23DFBD69' stroke-width='2'/%3E%3Cpath d='M32 14 L38 28 L50 32 L38 36 L32 50 L26 36 L14 32 L26 28 Z' fill='%23DFBD69'/%3E%3C/svg%3E" />
+  <meta name="description" content="INDIAN MARVELS — An Indian Knowledge System (IKS) digital museum presented by Walchand College of Engineering, Sangli (Academic Year 2026–27)." />
+
+  <!-- Google Fonts: Cinzel, Cormorant Garamond, Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ivory: '#FAF6EE',
+            parchment: '#F3EBD8',
+            sandstone: '#E8DCC4',
+            maroon: {
+              DEFAULT: '#5C1420',
+              dark: '#2B0B10',
+              deep: '#3D0D15',
+              light: '#7A1F2E'
+            },
+            gold: {
+              DEFAULT: '#C59B38',
+              light: '#DFBD69',
+              pale: '#F3E3B6',
+              bronze: '#8A6220'
+            },
+            ink: '#2C1E16'
+          },
+          fontFamily: {
+            display: ['"Cinzel"', 'Georgia', 'serif'],
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #FAF6EE;
+      background-image:
+        radial-gradient(rgba(197, 155, 56, 0.09) 1px, transparent 1px),
+        radial-gradient(rgba(92, 20, 32, 0.04) 1px, transparent 1px);
+      background-size: 36px 36px;
+      background-position: 0 0, 18px 18px;
+      color: #2C1E16;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(26px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slowSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes pulseRing {
+      0% { transform: scale(1); opacity: 0.7; }
+      100% { transform: scale(2.3); opacity: 0; }
+    }
+    @keyframes pillarVibrate {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+    }
+
+    .anim-fade-up { animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .anim-fade-up-1 { opacity: 0; animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards; }
+    .anim-fade-up-2 { opacity: 0; animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards; }
+    .anim-fade-up-3 { opacity: 0; animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards; }
+    .anim-slow-spin { animation: slowSpin 95s linear infinite; }
+    .pillar-active { animation: pillarVibrate 0.14s ease-in-out 4; box-shadow: 0 0 24px rgba(223, 189, 105, 0.85); }
+
+    .heritage-card {
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+    }
+    .heritage-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 42px -16px rgba(43, 11, 16, 0.24);
+    }
+
+    .ornate-border {
+      border: 1px solid rgba(197, 155, 56, 0.35);
+    }
+
+    .masonry-grid {
+      column-count: 1;
+      column-gap: 1.5rem;
+    }
+    @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
+    @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+    .masonry-item {
+      break-inside: avoid;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 9px; }
+    ::-webkit-scrollbar-track { background: #F3EBD8; }
+    ::-webkit-scrollbar-thumb { background: #8A6220; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #5C1420; }
+  </style>
 </head>
-<body>
-  <!-- Subtle Museum Preloader -->
-  <div id="preloader" class="preloader" aria-hidden="true">
-    <div class="preloader-inner">
-      <svg class="preloader-mandala" viewBox="0 0 100 100" width="68" height="68">
-        <circle cx="50" cy="50" r="44" fill="none" stroke="#DFBD69" stroke-width="1.5" stroke-dasharray="4 4"/>
-        <polygon points="50,10 60,40 90,50 60,60 50,90 40,60 10,50 40,40" fill="none" stroke="#C59B38" stroke-width="1.8"/>
-        <circle cx="50" cy="50" r="8" fill="#DFBD69"/>
-      </svg>
-      <span class="preloader-title">INDIAN MARVELS</span>
-      <span class="preloader-sub">Curating Centuries of Heritage…</span>
-    </div>
-  </div>
+<body class="selection:bg-maroon selection:text-ivory overflow-x-hidden">
 
-  <!-- Sticky Navigation Bar -->
-  <header id="navbar" class="navbar">
-    <div class="nav-container">
-      <a href="#home" class="brand" aria-label="Indian Marvels Home">
-        <span class="brand-emblem" aria-hidden="true">
-          <svg viewBox="0 0 40 40" width="34" height="34">
-            <circle cx="20" cy="20" r="18" fill="#5C1420" stroke="#DFBD69" stroke-width="1.6"/>
-            <path d="M20 7 L24 16 L33 20 L24 24 L20 33 L16 24 L7 20 L16 16 Z" fill="#DFBD69"/>
-            <circle cx="20" cy="20" r="3" fill="#5C1420"/>
+  <!-- ==================== STICKY NAVIGATION BAR ==================== -->
+  <header id="navbar" class="fixed top-0 inset-x-0 z-40 transition-all duration-300 bg-maroon-dark/80 backdrop-blur-md border-b border-gold/25">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo Emblem -->
+        <a href="#home" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 rounded-full border border-gold/60 bg-maroon-deep flex items-center justify-center shadow-inner group-hover:border-gold-light transition">
+            <svg viewBox="0 0 40 40" class="w-7 h-7 text-gold-light" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="20" cy="20" r="16" stroke-opacity="0.45"/>
+              <path d="M20 6 L24 16 L34 20 L24 24 L20 34 L16 24 L6 20 L16 16 Z" fill="currentColor" fill-opacity="0.2"/>
+              <circle cx="20" cy="20" r="3.5" fill="currentColor"/>
+            </svg>
+          </div>
+          <div>
+            <span class="block font-display text-base sm:text-lg font-bold tracking-[0.18em] text-ivory group-hover:text-gold-light transition">INDIAN MARVELS</span>
+            <span class="block text-[10px] tracking-[0.22em] uppercase text-gold-pale/80">WCE Sangli · IKS 2026–27</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden xl:flex items-center gap-6 text-xs font-semibold tracking-[0.12em] uppercase text-ivory/90">
+          <a href="#home" class="hover:text-gold-light transition">Home</a>
+          <a href="#about" class="hover:text-gold-light transition">About Project</a>
+          <a href="#monuments" class="hover:text-gold-light transition">Explore Monuments</a>
+          <a href="#architecture" class="hover:text-gold-light transition">Architecture</a>
+          <a href="#sculptures" class="hover:text-gold-light transition">Sculpture Gallery</a>
+          <a href="#science" class="hover:text-gold-light transition">Science &amp; Innovation</a>
+          <a href="#team" class="hover:text-gold-light transition">Our Team</a>
+          <a href="#references" class="hover:text-gold-light transition">References</a>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" aria-label="Toggle Menu" class="xl:hidden p-2.5 rounded-lg border border-gold/35 text-gold-light hover:bg-maroon/60 transition">
+          <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
-        </span>
-        <span class="brand-text">
-          <strong>INDIAN MARVELS</strong>
-          <small>IKS Digital Museum</small>
-        </span>
-      </a>
+          <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
 
-      <nav class="nav-links" id="nav-links" aria-label="Primary Navigation">
-        <a href="#home" class="nav-link active">Home</a>
-        <a href="#about" class="nav-link">About Project</a>
-        <a href="#monuments" class="nav-link">Explore Monuments</a>
-        <a href="#architecture" class="nav-link">Architecture</a>
-        <a href="#gallery" class="nav-link">Sculpture Gallery</a>
-        <a href="#science" class="nav-link">Science &amp; Innovation</a>
-        <a href="#team" class="nav-link">Our Team</a>
-        <a href="#references" class="nav-link">References</a>
-      </nav>
-
-      <button id="menu-toggle" class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="hidden xl:hidden bg-maroon-dark/95 backdrop-blur-xl border-t border-gold/25">
+      <div class="max-w-7xl mx-auto px-6 py-5 grid grid-cols-2 gap-3 text-xs font-semibold tracking-[0.14em] uppercase text-ivory/90">
+        <a href="#home" class="mobile-link py-2.5 px-3 rounded-lg hover:bg-maroon/70 hover:text-gold-light">Home</a>
+        <a href="#about" class="mobile-link py-2.5 px-3 rounded-lg hover:bg-maroon/70 hover:text-gold-light">About Project</a>
+        <a href="#monuments" class="mobile-link py-2.5 px-3 rounded-lg hover:bg-maroon/70 hover:text-gold-light">Explore Monuments</a>
+        <a href="#architecture" class="mobile-link py-2.5 px-3 rounded-lg hover:bg-maroon/70 hover:text-gold-light">Architecture</a>
+        <a href="#sculptures" class="mobile-link py-2.5 px-3 rounded-lg hover:bg-maroon/70 hover:text-gold-light">Sculpture Gallery</a>
+        <a href="#science" class="mobile-link py-2.5 px-3 rounded-lg hover:bg-maroon/70 hover:text-gold-light">Science &amp; Innovation</a>
+        <a href="#heritage-map" class="mobile-link py-2.5 px-3 rounded-lg hover:bg-maroon/70 hover:text-gold-light">Heritage Map</a>
+        <a href="#team" class="mobile-link py-2.5 px-3 rounded-lg hover:bg-maroon/70 hover:text-gold-light">Our Team</a>
+        <a href="#references" class="mobile-link py-2.5 px-3 rounded-lg hover:bg-maroon/70 hover:text-gold-light col-span-2">References &amp; Acknowledgement</a>
+      </div>
     </div>
   </header>
 
-  <main>
-    <!-- 1. HERO SECTION -->
-    <section id="home" class="hero">
-      <div class="hero-bg" role="img" aria-label="Iconic Stone Chariot at Vijaya Vittala Temple, Hampi"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-mandala-watermark" aria-hidden="true"></div>
+  <!-- ==================== HERO SECTION ==================== -->
+  <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-maroon-dark pt-20">
+    <!-- Background Monument Photo -->
+    <img
+      src="https://commons.wikimedia.org/wiki/Special:FilePath/Vittala_temple_stone_chariot.jpg?width=1800"
+      data-fallback="https://commons.wikimedia.org/wiki/Special:FilePath/Hampi_chariot.jpg?width=1600"
+      alt="Stone Chariot at Vijaya Vittala Temple, Hampi"
+      onerror="handleImgError(this, 'Vijaya Vittala Stone Chariot, Hampi')"
+      class="absolute inset-0 w-full h-full object-cover object-center scale-105 opacity-75"
+    />
+    <!-- Rich Museum Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-maroon-dark/80 via-maroon-dark/65 to-maroon-dark/95"></div>
 
-      <div class="hero-content">
-        <p class="hero-meta fade-up">Indian Knowledge System &nbsp;|&nbsp; Walchand College of Engineering, Sangli &nbsp;|&nbsp; 2026–27</p>
-        <div class="gold-divider fade-up delay-1" aria-hidden="true">
-          <span></span><i class="diamond"></i><span></span>
-        </div>
-        <h1 class="hero-title fade-up delay-1">INDIAN MARVELS</h1>
-        <p class="hero-subtitle fade-up delay-2">Discovering India's Timeless Knowledge, Engineering &amp; Architectural Brilliance.</p>
-        <p class="hero-supporting fade-up delay-3">"Journey through centuries of Indian innovation, artistic excellence and architectural wonders."</p>
+    <!-- Rotating Mandala Watermark -->
+    <svg viewBox="0 0 400 400" class="pointer-events-none absolute w-[680px] h-[680px] text-gold-light/10 anim-slow-spin" fill="none" stroke="currentColor" stroke-width="0.9">
+      <circle cx="200" cy="200" r="190"/>
+      <circle cx="200" cy="200" r="150" stroke-dasharray="6 6"/>
+      <circle cx="200" cy="200" r="110"/>
+      <polygon points="200,18 245,155 382,200 245,245 200,382 155,245 18,200 155,155"/>
+      <polygon points="72,72 200,136 328,72 264,200 328,328 200,264 72,328 136,200"/>
+    </svg>
 
-        <div class="hero-actions fade-up delay-3">
-          <a href="#monuments" class="btn-gold">
-            <span>Explore Heritage</span>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </a>
-          <a href="#science" class="btn-outline-light">Interactive Science Lab</a>
-        </div>
+    <!-- Hero Content -->
+    <div class="relative z-10 max-w-5xl mx-auto px-6 text-center py-16">
+      <div class="anim-fade-up inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-gold/45 bg-maroon-dark/60 backdrop-blur-md text-[11px] sm:text-xs font-medium tracking-[0.2em] uppercase text-gold-pale mb-8">
+        <span class="w-1.5 h-1.5 rounded-full bg-gold-light"></span>
+        Indian Knowledge System &nbsp;|&nbsp; Walchand College of Engineering, Sangli &nbsp;|&nbsp; 2026–27
+        <span class="w-1.5 h-1.5 rounded-full bg-gold-light"></span>
       </div>
 
-      <a href="#about" class="scroll-indicator" aria-label="Scroll to About Section">
-        <span>Scroll to Explore</span>
-        <div class="scroll-mouse"><div class="scroll-dot"></div></div>
-      </a>
-    </section>
+      <h1 class="anim-fade-up-1 font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-[0.14em] text-ivory drop-shadow-[0_6px_28px_rgba(0,0,0,0.65)]">
+        INDIAN MARVELS
+      </h1>
 
-    <!-- 2. ABOUT OUR PROJECT -->
-    <section id="about" class="section section-ivory">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="eyebrow">Indian Knowledge System Exhibition</span>
-          <h2>Rediscovering India's Glorious Heritage</h2>
-          <div class="lotus-divider" aria-hidden="true"><span></span>✦<span></span></div>
+      <div class="anim-fade-up-1 flex items-center justify-center gap-4 my-6">
+        <span class="h-px w-16 sm:w-28 bg-gradient-to-r from-transparent to-gold-light"></span>
+        <span class="w-2.5 h-2.5 rotate-45 border border-gold-light bg-gold/40"></span>
+        <span class="h-px w-16 sm:w-28 bg-gradient-to-l from-transparent to-gold-light"></span>
+      </div>
+
+      <p class="anim-fade-up-2 font-serif text-xl sm:text-2xl md:text-3xl italic text-gold-pale max-w-3xl mx-auto leading-relaxed">
+        Discovering India's Timeless Knowledge, Engineering &amp; Architectural Brilliance.
+      </p>
+
+      <p class="anim-fade-up-2 mt-4 text-sm sm:text-base text-ivory/80 max-w-2xl mx-auto leading-relaxed">
+        "Journey through centuries of Indian innovation, artistic excellence and architectural wonders."
+      </p>
+
+      <div class="anim-fade-up-3 mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a href="#monuments" class="group inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-gold via-gold-light to-gold text-maroon-dark font-display text-xs sm:text-sm font-bold tracking-[0.18em] uppercase shadow-[0_12px_32px_rgba(197,155,56,0.4)] hover:brightness-110 transition">
+          Explore Heritage
+          <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+          </svg>
+        </a>
+        <a href="#science" class="inline-flex items-center gap-2 px-7 py-4 rounded-full border border-gold/55 bg-maroon-dark/50 backdrop-blur-md text-ivory font-display text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase hover:bg-maroon/70 hover:border-gold-light transition">
+          Science &amp; Innovation Lab
+        </a>
+      </div>
+    </div>
+
+    <!-- Scroll-Down Indicator -->
+    <a href="#about" aria-label="Scroll to About Project" class="absolute bottom-7 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-gold-pale/80 hover:text-gold-light transition">
+      <span class="text-[10px] tracking-[0.25em] uppercase">Scroll to Enter Museum</span>
+      <div class="w-5 h-9 rounded-full border border-gold/50 flex justify-center p-1.5">
+        <span class="w-1 h-2 rounded-full bg-gold-light animate-bounce"></span>
+      </div>
+    </a>
+  </section>
+
+  <!-- ==================== ABOUT OUR PROJECT ==================== -->
+  <section id="about" class="relative py-24 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="grid lg:grid-cols-12 gap-12 items-center">
+      <!-- Editorial Text -->
+      <div class="lg:col-span-7">
+        <p class="font-display text-xs font-bold tracking-[0.25em] uppercase text-gold-bronze mb-3">
+          Curatorial Introduction · Indian Knowledge System
+        </p>
+        <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-maroon leading-tight">
+          Rediscovering India's Glorious Heritage
+        </h2>
+        <div class="mt-5 mb-7 flex items-center gap-3">
+          <span class="h-0.5 w-16 bg-gold"></span>
+          <span class="w-2 h-2 rotate-45 bg-maroon"></span>
+          <span class="h-0.5 w-8 bg-gold/50"></span>
         </div>
 
-        <div class="about-grid reveal">
-          <div class="about-editorial">
-            <p class="lead-dropcap">
-              <strong>Indian Marvels</strong> is an immersive academic exhibition created at Walchand College of Engineering, Sangli, celebrating the remarkable convergence of science, structural engineering, precision astronomy, temple architecture, and sculptural artistry across Indian civilization.
-            </p>
-            <p>
-              From monolithic mountains carved top-down into sacred shrines at Ellora to granite pillars tuned to classical musical scales in Hampi, and from stone astronomical observatories measuring time to within two seconds in Jaipur to unsupported vaulted halls in Lucknow—every monument stands as a living textbook of indigenous ingenuity.
-            </p>
-            <p>
-              Curated under the <em>Indian Knowledge System (IKS)</em> initiative for Academic Year 2026–27, this digital museum invites students, researchers, and heritage enthusiasts to look beyond stone facades and examine the mathematics, acoustics, optics, and cultural philosophy embedded in India's historic monuments.
-            </p>
+        <p class="font-serif text-xl sm:text-2xl text-ink/90 leading-relaxed mb-5">
+          <strong>Indian Marvels</strong> is an interactive digital museum created under the Indian Knowledge System (IKS) curriculum at Walchand College of Engineering, Sangli, celebrating India's timeless mastery across architecture, structural engineering, acoustics, optics, astronomy, and sculpture.
+        </p>
+        <p class="text-ink/80 leading-relaxed mb-6">
+          From the monolithic basalt excavation of Kailasa Temple at Ellora and the lathe-turned soapstone star shrines of the Hoysalas, to the acoustic granite musical pillars of Hampi and the masonry solar observatories of Jaipur, each monument stands as a living treatise in geometry, material science, and artistic devotion.
+        </p>
+
+        <!-- Supported Project Statistics -->
+        <div class="grid sm:grid-cols-3 gap-4 mt-8">
+          <div class="p-5 rounded-2xl bg-parchment/90 ornate-border shadow-sm">
+            <p class="font-display text-3xl font-bold text-maroon">10</p>
+            <p class="mt-1 font-display text-xs font-bold tracking-[0.14em] uppercase text-gold-bronze">Featured Monuments</p>
+            <p class="mt-1 text-xs text-ink/70">Spanning Karnataka, Maharashtra, Tamil Nadu, Rajasthan &amp; Uttar Pradesh</p>
           </div>
+          <div class="p-5 rounded-2xl bg-parchment/90 ornate-border shadow-sm">
+            <p class="font-display text-3xl font-bold text-maroon">6+</p>
+            <p class="mt-1 font-display text-xs font-bold tracking-[0.14em] uppercase text-gold-bronze">Architectural Traditions</p>
+            <p class="mt-1 text-xs text-ink/70">Hoysala, Dravidian, Vijayanagara, Rock-cut, Gupta &amp; Astronomical</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-parchment/90 ornate-border shadow-sm">
+            <p class="font-display text-3xl font-bold text-maroon">1,500+</p>
+            <p class="mt-1 font-display text-xs font-bold tracking-[0.14em] uppercase text-gold-bronze">Years of Heritage</p>
+            <p class="mt-1 text-xs text-ink/70">Continuous evolution of Indian scientific &amp; sculptural ingenuity</p>
+          </div>
+        </div>
+      </div>
 
-          <div class="about-stats-panel">
-            <div class="stat-card">
-              <div class="stat-num">10</div>
-              <div class="stat-label">Featured Monuments</div>
-              <p>Curated across Karnataka, Tamil Nadu, Maharashtra, Rajasthan &amp; Uttar Pradesh.</p>
-            </div>
-            <div class="stat-card">
-              <div class="stat-num">6+</div>
-              <div class="stat-label">Architectural Traditions</div>
-              <p>Hoysala, Dravidian, Vijayanagara, Rock-Cut, Gupta Nagara, Maru-Gurjara &amp; Awadhi.</p>
-            </div>
-            <div class="stat-card">
-              <div class="stat-num">1,500+</div>
-              <div class="stat-label">Years of Heritage</div>
-              <p>Spanning Gupta-era sanctuary masonry (c. 500 CE) to 18th-century precision engineering.</p>
+      <!-- Editorial Visual Frame -->
+      <div class="lg:col-span-5">
+        <div class="relative p-3 rounded-3xl bg-parchment ornate-border shadow-xl">
+          <div class="relative rounded-2xl overflow-hidden aspect-[4/5] bg-maroon-deep">
+            <img
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Kailasa_temple_overview,_Ellora.jpg?width=1100"
+              data-fallback="https://commons.wikimedia.org/wiki/Special:FilePath/Ellora_cave16_001.jpg?width=1100"
+              alt="Monolithic Kailasa Temple carved top-down from living basalt rock at Ellora"
+              onerror="handleImgError(this, 'Kailasa Temple, Ellora')"
+              loading="lazy"
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-maroon-dark/90 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 inset-x-0 p-6 text-ivory">
+              <span class="inline-block px-3 py-1 rounded-full bg-gold/25 border border-gold/50 text-[10px] font-display tracking-[0.2em] uppercase text-gold-pale mb-2">
+                Featured Masterpiece
+              </span>
+              <h3 class="font-display text-xl font-bold">Kailasa Temple, Ellora</h3>
+              <p class="text-xs text-ivory/80 mt-1">
+                Carved top-down from a single basalt cliff — an unrivalled feat of ancient Indian rock-cut engineering.
+              </p>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- 3. EXPLORE THE MONUMENTS -->
-    <section id="monuments" class="section section-parchment">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="eyebrow">Permanent Collection</span>
-          <h2>Explore the Monuments</h2>
-          <p class="section-desc">Select any monument to open its complete historical dossier, architectural engineering analysis, sculpture index, and curated gallery.</p>
-          <div class="lotus-divider" aria-hidden="true"><span></span>✦<span></span></div>
-        </div>
-
-        <div class="filter-bar reveal" role="tablist" aria-label="Filter monuments by category">
-          <button class="filter-btn active" data-filter="All" role="tab" aria-selected="true">All (10)</button>
-          <button class="filter-btn" data-filter="Temples" role="tab" aria-selected="false">Temples</button>
-          <button class="filter-btn" data-filter="Architecture" role="tab" aria-selected="false">Architecture</button>
-          <button class="filter-btn" data-filter="Astronomy" role="tab" aria-selected="false">Astronomy</button>
-          <button class="filter-btn" data-filter="Monuments" role="tab" aria-selected="false">Monuments</button>
-        </div>
-
-        <div id="monuments-grid" class="monuments-grid"></div>
+  <!-- ==================== EXPLORE THE MONUMENTS ==================== -->
+  <section id="monuments" class="py-24 bg-parchment/65 border-y border-gold/25">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Heading -->
+      <div class="text-center max-w-3xl mx-auto">
+        <p class="font-display text-xs font-bold tracking-[0.25em] uppercase text-gold-bronze mb-2">
+          Curated Exhibition Hall
+        </p>
+        <h2 class="font-display text-3xl sm:text-5xl font-bold text-maroon">
+          Explore the 10 Monuments
+        </h2>
+        <p class="mt-4 font-serif text-lg sm:text-xl text-ink/80">
+          Select any category or click a monument card to open its complete historical dossier, architectural blueprint, sculptural highlights, and photo gallery.
+        </p>
       </div>
-    </section>
 
-    <!-- 4. ARCHITECTURE SHOWCASE -->
-    <section id="architecture" class="section section-ivory">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="eyebrow">Sacred Geometry &amp; Structural Systems</span>
-          <h2>India's Architectural Traditions</h2>
-          <p class="section-desc">Examine the distinct regional grammars, materials, and structural principles that shaped the subcontinent's built legacy.</p>
-          <div class="lotus-divider" aria-hidden="true"><span></span>✦<span></span></div>
-        </div>
-
-        <div id="architecture-grid" class="architecture-grid"></div>
+      <!-- Category Filter Tabs -->
+      <div id="filter-bar" class="mt-10 flex flex-wrap justify-center gap-2.5">
+        <!-- Populated by JS -->
       </div>
-    </section>
 
-    <!-- 5. SCULPTURE GALLERY -->
-    <section id="gallery" class="section section-dark-heritage">
-      <div class="container">
-        <div class="section-header light reveal">
-          <span class="eyebrow">Iconography &amp; Stone Craftsmanship</span>
-          <h2>Stories Carved in Stone</h2>
-          <p class="section-desc">Click any sculpture to inspect it in full-screen exhibition mode with iconographic context and cultural significance.</p>
-          <div class="lotus-divider" aria-hidden="true"><span></span>✦<span></span></div>
-        </div>
-
-        <div id="sculpture-grid" class="sculpture-masonry"></div>
+      <!-- 10 Monument Cards Grid -->
+      <div id="monuments-grid" class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
+        <!-- Populated by JS -->
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- 6. SCIENCE & INNOVATION (INTERACTIVE LAB) -->
-    <section id="science" class="section section-parchment">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="eyebrow">Ancient Indian STEM &amp; Engineering</span>
-          <h2>Science &amp; Innovation in Stone</h2>
-          <p class="section-desc">Interact with live simulations demonstrating astronomical timekeeping, celestial coordinate mapping, temple optics, and lithic acoustics.</p>
-          <div class="lotus-divider" aria-hidden="true"><span></span>✦<span></span></div>
-        </div>
+  <!-- ==================== ARCHITECTURE SHOWCASE ==================== -->
+  <section id="architecture" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="text-center max-w-3xl mx-auto">
+      <p class="font-display text-xs font-bold tracking-[0.25em] uppercase text-gold-bronze mb-2">
+        Structural Grammar &amp; Craftsmanship
+      </p>
+      <h2 class="font-display text-3xl sm:text-5xl font-bold text-maroon">
+        India's Architectural Traditions
+      </h2>
+      <p class="mt-4 font-serif text-lg sm:text-xl text-ink/80">
+        Explore six distinct schools of Indian architectural engineering represented across our featured monuments.
+      </p>
+    </div>
 
-        <div class="science-tabs reveal" role="tablist" aria-label="Science interactive demonstrations">
-          <button class="science-tab active" data-tab="samrat" role="tab" aria-selected="true">Samrat Yantra Sundial</button>
-          <button class="science-tab" data-tab="yantra" role="tab" aria-selected="false">Jai Prakash &amp; Ram Yantra</button>
-          <button class="science-tab" data-tab="pinhole" role="tab" aria-selected="false">Virupaksha Pinhole Optics</button>
-          <button class="science-tab" data-tab="pillars" role="tab" aria-selected="false">Musical Pillars Acoustics</button>
-        </div>
+    <!-- Interactive Architecture Showcase -->
+    <div id="architecture-tabs" class="mt-10 flex flex-wrap justify-center gap-2.5"></div>
+    <div id="architecture-stage" class="mt-8"></div>
+  </section>
 
-        <!-- Tab 1: Samrat Yantra -->
-        <div id="panel-samrat" class="science-panel active reveal">
-          <div class="lab-grid">
-            <div class="lab-visual-box">
-              <div class="lab-badge">Jantar Mantar, Jaipur • Latitude 26.92° N</div>
-              <svg id="samrat-svg" viewBox="0 0 520 300" class="lab-svg" aria-label="Interactive Samrat Yantra Sundial Diagram">
-                <defs>
-                  <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#2B0B10"/>
-                    <stop offset="100%" stop-color="#6B242E"/>
-                  </linearGradient>
-                  <linearGradient id="stoneGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stop-color="#F3EBD8"/>
-                    <stop offset="100%" stop-color="#D4BC8B"/>
-                  </linearGradient>
-                </defs>
-                <rect width="520" height="300" rx="12" fill="url(#skyGrad)"/>
-                <!-- Sun arc -->
-                <path d="M 60 215 Q 260 20 460 215" fill="none" stroke="rgba(223,189,105,0.28)" stroke-dasharray="5 5" stroke-width="1.5"/>
-                <!-- Sun ray -->
-                <line id="sun-ray" x1="150" y1="90" x2="260" y2="140" stroke="#DFBD69" stroke-width="2" stroke-dasharray="4 3" opacity="0.85"/>
-                <!-- Sun orb -->
-                <circle id="sun-orb" cx="150" cy="90" r="14" fill="#F8D568"/>
-                <circle id="sun-glow" cx="150" cy="90" r="22" fill="rgba(248,213,104,0.22)"/>
-                <!-- Ground -->
-                <rect x="0" y="235" width="520" height="65" fill="#3D1F18"/>
-                <!-- East & West Marble Quadrants -->
-                <path d="M 110 235 A 150 150 0 0 0 260 235" fill="none" stroke="#E8DCC4" stroke-width="10"/>
-                <path d="M 260 235 A 150 150 0 0 0 410 235" fill="none" stroke="#E8DCC4" stroke-width="10"/>
-                <path d="M 105 225 Q 260 285 415 225" fill="none" stroke="#C59B38" stroke-width="2.5"/>
-                <!-- Shadow Line on Quadrant -->
-                <line id="samrat-shadow" x1="260" y1="120" x2="365" y2="238" stroke="#1A060A" stroke-width="5" stroke-linecap="round" opacity="0.85"/>
-                <!-- Gnomon Triangle (27m high, 26.92 deg) -->
-                <polygon points="180,235 280,235 280,105" fill="url(#stoneGrad)" stroke="#8C6239" stroke-width="2"/>
-                <text x="208" y="226" fill="#5C1420" font-size="11" font-weight="700">26.92° (Lat)</text>
-                <text x="288" y="160" fill="#FAF6EE" font-size="11" font-weight="600">27m Gnomon</text>
-                <text x="90" y="255" fill="#DFBD69" font-size="11">WEST QUADRANT (AM)</text>
-                <text x="315" y="255" fill="#DFBD69" font-size="11">EAST QUADRANT (PM)</text>
-              </svg>
-              <div class="lab-controls">
-                <label for="solar-slider">Move the Sun (Local Solar Time): <strong id="solar-time-readout">09:30 AM</strong></label>
-                <input type="range" id="solar-slider" min="360" max="1080" step="5" value="570" />
-                <div class="readout-row">
-                  <span>Shadow Side: <strong id="shadow-quadrant">West Marble Arc</strong></span>
-                  <span>Sun Elevation: <strong id="sun-elevation">52.5°</strong></span>
-                </div>
+  <!-- ==================== SCULPTURE GALLERY ==================== -->
+  <section id="sculptures" class="py-24 bg-maroon-dark text-ivory relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#DFBD69 1px, transparent 1px); background-size: 28px 28px;"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto">
+        <p class="font-display text-xs font-bold tracking-[0.25em] uppercase text-gold-light mb-2">
+          Iconography &amp; Relief Artistry
+        </p>
+        <h2 class="font-display text-3xl sm:text-5xl font-bold text-ivory">
+          Stories Carved in Stone
+        </h2>
+        <p class="mt-4 font-serif text-lg sm:text-xl text-gold-pale/85">
+          Click any sculpture or architectural detail to inspect it in full-screen exhibition view with its mythological and cultural significance.
+        </p>
+      </div>
+
+      <!-- Masonry Sculpture Grid -->
+      <div id="sculpture-gallery" class="mt-14 masonry-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SCIENCE & INNOVATION ==================== -->
+  <section id="science" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="text-center max-w-3xl mx-auto">
+      <p class="font-display text-xs font-bold tracking-[0.25em] uppercase text-gold-bronze mb-2">
+        Ancient Indian STEM &amp; Precision Engineering
+      </p>
+      <h2 class="font-display text-3xl sm:text-5xl font-bold text-maroon">
+        Science &amp; Innovation Lab
+      </h2>
+      <p class="mt-4 font-serif text-lg sm:text-xl text-ink/80">
+        Interact with live simulations demonstrating astronomical timekeeping, spherical coordinates, optical projection, and lithophonic stone acoustics.
+      </p>
+    </div>
+
+    <!-- Lab Switcher -->
+    <div id="science-tabs" class="mt-10 flex flex-wrap justify-center gap-3">
+      <button onclick="switchLab('samrat')" data-lab="samrat" class="lab-tab px-5 py-3 rounded-full font-display text-xs font-bold tracking-[0.14em] uppercase transition">
+        1. Samrat Yantra
+      </button>
+      <button onclick="switchLab('jaiprakash')" data-lab="jaiprakash" class="lab-tab px-5 py-3 rounded-full font-display text-xs font-bold tracking-[0.14em] uppercase transition">
+        2. Jai Prakash &amp; Ram Yantra
+      </button>
+      <button onclick="switchLab('pinhole')" data-lab="pinhole" class="lab-tab px-5 py-3 rounded-full font-display text-xs font-bold tracking-[0.14em] uppercase transition">
+        3. Virupaksha Pinhole Camera
+      </button>
+      <button onclick="switchLab('pillars')" data-lab="pillars" class="lab-tab px-5 py-3 rounded-full font-display text-xs font-bold tracking-[0.14em] uppercase transition">
+        4. Vittala Musical Pillars
+      </button>
+    </div>
+
+    <!-- Lab Interactive Container -->
+    <div class="mt-8 rounded-3xl bg-parchment/90 ornate-border shadow-xl p-6 sm:p-10">
+
+      <!-- LAB 1: SAMRAT YANTRA -->
+      <div id="lab-samrat" class="lab-panel grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-6">
+          <span class="inline-block px-3 py-1 rounded-full bg-maroon text-gold-pale font-display text-[10px] tracking-[0.2em] uppercase">
+            Jantar Mantar · Jaipur
+          </span>
+          <h3 class="mt-3 font-display text-2xl sm:text-3xl font-bold text-maroon">
+            Samrat Yantra &amp; Precision Timekeeping
+          </h3>
+          <p class="mt-3 text-sm sm:text-base text-ink/80 leading-relaxed">
+            The <strong>Brihat Samrat Yantra</strong> is the world's largest stone equinoctial sundial, rising 27 meters high. Its hypotenuse (gnomon) is inclined at <strong>26.92°</strong>—matching Jaipur's exact latitude—so it points parallel to Earth's rotational axis. As the Sun moves across the sky, the gnomon casts a crisp shadow along two curved marble quadrants calibrated to measure local solar time down to <strong>2 seconds</strong>.
+          </p>
+
+          <div class="mt-6 p-5 rounded-2xl bg-ivory ornate-border">
+            <div class="flex items-center justify-between mb-2">
+              <label for="solar-slider" class="font-display text-xs font-bold tracking-[0.15em] uppercase text-maroon">
+                Adjust Sun Position (6:00 AM – 6:00 PM)
+              </label>
+              <span id="solar-time-display" class="font-display text-lg font-bold text-gold-bronze">10:30 AM</span>
+            </div>
+            <input id="solar-slider" type="range" min="6" max="18" step="0.25" value="10.5" oninput="updateSamrat(this.value)" class="w-full accent-[#5C1420] cursor-pointer" />
+            <div class="mt-3 grid grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded-xl bg-parchment/80">
+                <span class="block text-ink/60">Active Quadrant</span>
+                <strong id="solar-quadrant" class="text-maroon">Western Marble Quadrant</strong>
+              </div>
+              <div class="p-3 rounded-xl bg-parchment/80">
+                <span class="block text-ink/60">Solar Altitude Angle</span>
+                <strong id="solar-angle" class="text-maroon">67.5°</strong>
               </div>
             </div>
-            <div class="lab-info">
-              <h3>Samrat Yantra — The Supreme Instrument</h3>
-              <p>Standing 27 metres tall at Jaipur's Jantar Mantar (built by Maharaja Sawai Jai Singh II, 1728–1734), the <strong>Brihat Samrat Yantra</strong> is the world's largest stone equinoctial sundial.</p>
-              <ul class="science-points">
-                <li><strong>Earth-Axis Alignment:</strong> Its triangular gnomon hypotenuse is inclined at approximately <code>26.92°</code>—matching Jaipur's exact latitude—making it parallel to the Earth's rotational axis.</li>
-                <li><strong>2-Second Precision:</strong> Because the sun's shadow moves across the massive marble quadrant arcs at roughly <strong>6 cm per minute</strong> (1 mm per second), observers can read Jaipur's local solar time down to an accuracy of <strong>2 seconds</strong>.</li>
-                <li><strong>Solar Declination:</strong> Graduated scales along the gnomon also track the sun's seasonal declination and meridian altitude throughout the year.</li>
-              </ul>
-            </div>
           </div>
         </div>
 
-        <!-- Tab 2: Jai Prakash & Ram Yantra -->
-        <div id="panel-yantra" class="science-panel">
-          <div class="lab-grid">
-            <div class="lab-visual-box">
-              <div class="lab-badge">Celestial Coordinate Mapping • Jaipur</div>
-              <svg id="yantra-svg" viewBox="0 0 520 300" class="lab-svg" aria-label="Jai Prakash and Ram Yantra Celestial Coordinate Diagram">
-                <rect width="520" height="300" rx="12" fill="#2B0B10"/>
-                <!-- Left: Jai Prakash Bowl -->
-                <g transform="translate(135,150)">
-                  <text x="0" y="-115" text-anchor="middle" fill="#DFBD69" font-size="12" font-weight="700">JAI PRAKASH YANTRA (HEMISPHERE)</text>
-                  <circle cx="0" cy="0" r="88" fill="#3D161E" stroke="#C59B38" stroke-width="2.5"/>
-                  <circle cx="0" cy="0" r="58" fill="none" stroke="rgba(223,189,105,0.35)" stroke-dasharray="3 3"/>
-                  <circle cx="0" cy="0" r="28" fill="none" stroke="rgba(223,189,105,0.35)" stroke-dasharray="3 3"/>
-                  <line x1="-88" y1="0" x2="88" y2="0" stroke="rgba(250,246,238,0.4)" stroke-width="1.2"/>
-                  <line x1="0" y1="-88" x2="0" y2="88" stroke="rgba(250,246,238,0.4)" stroke-width="1.2"/>
-                  <circle cx="0" cy="0" r="4" fill="#DFBD69"/>
-                  <circle id="jp-shadow-dot" cx="28" cy="-22" r="7" fill="#F8D568" stroke="#5C1420" stroke-width="2"/>
-                  <text x="0" y="-94" text-anchor="middle" fill="#FAF6EE" font-size="10">N</text>
-                  <text x="0" y="102" text-anchor="middle" fill="#FAF6EE" font-size="10">S</text>
-                  <text x="-97" y="4" text-anchor="middle" fill="#FAF6EE" font-size="10">W</text>
-                  <text x="97" y="4" text-anchor="middle" fill="#FAF6EE" font-size="10">E</text>
-                </g>
-                <!-- Right: Ram Yantra Cylinder -->
-                <g transform="translate(385,155)">
-                  <text x="0" y="-120" text-anchor="middle" fill="#DFBD69" font-size="12" font-weight="700">RAM YANTRA (CYLINDRICAL)</text>
-                  <ellipse cx="0" cy="65" rx="82" ry="22" fill="#4E2129" stroke="#C59B38" stroke-width="2"/>
-                  <line x1="-82" y1="-45" x2="-82" y2="65" stroke="#C59B38" stroke-width="2"/>
-                  <line x1="82" y1="-45" x2="82" y2="65" stroke="#C59B38" stroke-width="2"/>
-                  <ellipse cx="0" cy="-45" rx="82" ry="22" fill="none" stroke="#C59B38" stroke-width="1.8" stroke-dasharray="4 3"/>
-                  <!-- Central Pillar -->
-                  <line x1="0" y1="65" x2="0" y2="-45" stroke="#F3EBD8" stroke-width="6" stroke-linecap="round"/>
-                  <!-- Projected Shadow -->
-                  <line id="ram-shadow-ray" x1="0" y1="-45" x2="52" y2="65" stroke="#F8D568" stroke-width="2.5" stroke-dasharray="4 2"/>
-                  <circle id="ram-shadow-tip" cx="52" cy="65" r="5" fill="#F8D568"/>
-                  <text x="0" y="102" text-anchor="middle" fill="#E8DCC4" font-size="10">Altitude &amp; Azimuth Floor/Wall Scales</text>
-                </g>
-              </svg>
-              <div class="lab-controls">
-                <div class="dual-sliders">
-                  <div>
-                    <label for="alt-slider">Solar Altitude: <strong id="alt-val">55°</strong></label>
-                    <input type="range" id="alt-slider" min="15" max="85" value="55" />
-                  </div>
-                  <div>
-                    <label for="azi-slider">Solar Azimuth: <strong id="azi-val">130°</strong></label>
-                    <input type="range" id="azi-slider" min="0" max="360" value="130" />
-                  </div>
-                </div>
-                <div class="readout-row">
-                  <span>Celestial Map: <strong id="yantra-status">Inverted Sky Hemisphere Active</strong></span>
-                </div>
-              </div>
-            </div>
-            <div class="lab-info">
-              <h3>Jai Prakash Yantra &amp; Ram Yantra</h3>
-              <p>Beyond simple timekeeping, Jaipur's observatory translates the entire spherical sky dome into walk-in stone geometry.</p>
-              <ul class="science-points">
-                <li><strong>Jai Prakash Yantra:</strong> Built as two complementary concave marble hemispheres sunken into the earth. Crossed wire grids suspend a central metal ring whose shadow projects an <em>inverted map of the heavens</em>—allowing astronomers to step inside the bowl and read zodiac signs, altitude, azimuth, and local time simultaneously.</li>
-                <li><strong>Ram Yantra:</strong> A pair of open-topped cylindrical structures with a central vertical pillar whose height equals the cylinder's radius. At altitudes above 45°, the shadow falls onto the radial floor sectors; below 45°, it climbs the graduated vertical walls.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab 3: Virupaksha Pinhole Camera -->
-        <div id="panel-pinhole" class="science-panel">
-          <div class="lab-grid">
-            <div class="lab-visual-box">
-              <div class="lab-badge">Virupaksha Temple, Hampi • Optical Physics</div>
-              <svg id="pinhole-svg" viewBox="0 0 520 300" class="lab-svg" aria-label="Virupaksha Temple Pinhole Camera Optical Diagram">
-                <rect width="520" height="300" rx="12" fill="#231215"/>
-                <!-- Bright Courtyard (Left) -->
-                <rect x="0" y="0" width="270" height="300" fill="#462822"/>
-                <rect x="0" y="250" width="520" height="50" fill="#2E1813"/>
-                <!-- Eastern Gopuram (Object) -->
-                <g id="gopuram-obj" transform="translate(65,65)">
-                  <polygon points="35,0 60,40 10,40" fill="#DFBD69"/>
-                  <rect x="14" y="40" width="42" height="35" fill="#C59B38"/>
-                  <rect x="8" y="75" width="54" height="45" fill="#A97D2E"/>
-                  <rect x="2" y="120" width="66" height="65" fill="#8C6239"/>
-                  <rect x="26" y="148" width="18" height="37" fill="#2B0B10"/>
-                  <text x="35" y="-12" text-anchor="middle" fill="#FAF6EE" font-size="11" font-weight="600">50m Eastern Gopuram</text>
-                </g>
-                <!-- Partition Wall with Narrow Slit/Aperture -->
-                <rect x="268" y="20" width="14" height="122" fill="#7D5A44"/>
-                <rect x="268" y="158" width="14" height="92" fill="#7D5A44"/>
-                <circle cx="275" cy="150" r="6" fill="none" stroke="#F8D568" stroke-width="1.5"/>
-                <text x="275" y="16" text-anchor="middle" fill="#DFBD69" font-size="10">Pinhole Slit</text>
-                <!-- Dark Chamber (Right) -->
-                <rect x="282" y="20" width="218" height="230" fill="#140709"/>
-                <!-- Inner Projection Wall -->
-                <rect x="462" y="35" width="14" height="215" fill="#3B2420" stroke="#8C6239"/>
-                <!-- Light Rays crossing through pinhole -->
-                <line id="ray-top" x1="100" y1="65" x2="462" y2="225" stroke="#F8D568" stroke-width="1.8" stroke-dasharray="5 3"/>
-                <line id="ray-bottom" x1="100" y1="250" x2="462" y2="75" stroke="#DFBD69" stroke-width="1.8" stroke-dasharray="5 3"/>
-                <!-- Inverted Projected Image on Wall -->
-                <g id="inverted-proj" transform="translate(462,150) scale(0.55) rotate(180)" opacity="0.88">
-                  <polygon points="0,-90 22,-50 -22,-50" fill="#F8D568"/>
-                  <rect x="-18" y="-50" width="36" height="32" fill="#DFBD69"/>
-                  <rect x="-24" y="-18" width="48" height="40" fill="#C59B38"/>
-                  <rect x="-28" y="22" width="56" height="58" fill="#A97D2E"/>
-                </g>
-                <text x="395" y="278" text-anchor="middle" fill="#DFBD69" font-size="11">Inverted Shadow on Dark Chamber Wall</text>
-              </svg>
-              <div class="lab-controls">
-                <label for="aperture-slider">Aperture Width / Focus Clarity: <strong id="aperture-readout">Optimal Narrow Slit (Sharp Image)</strong></label>
-                <input type="range" id="aperture-slider" min="1" max="10" value="3" />
-              </div>
-            </div>
-            <div class="lab-info">
-              <h3>The Pinhole Camera Effect — Virupaksha Temple</h3>
-              <p>Inside the dark, stone-walled hall behind the main sanctum of Hampi's <strong>Virupaksha Temple</strong>, visitors witness a remarkable upside-down projection of the towering 9-storey Eastern Gopuram—located over 90 metres away.</p>
-              <ul class="science-points">
-                <li><strong>Rectilinear Propagation of Light:</strong> Sunlight reflected off the top of the bright 50-metre gopuram travels in straight lines downward through a small rectangular opening in the upper wall, while rays from the base angle upward.</li>
-                <li><strong>Natural Camera Obscura:</strong> Because the rays cross at the narrow opening, an unmistakable <strong>inverted real image</strong> forms naturally on the opposite darkened wall without lenses or mirrors.</li>
-                <li><strong>Architectural Alignment:</strong> The precise spatial alignment between the sunlit courtyard tower, aperture, and darkened rear chamber preserves this optical phenomenon throughout daylight hours.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab 4: Musical Pillars -->
-        <div id="panel-pillars" class="science-panel">
-          <div class="lab-grid">
-            <div class="lab-visual-box">
-              <div class="lab-badge">Vijaya Vittala Temple, Hampi • Interactive Lithic Synthesizer</div>
-              <div class="pillars-stage" id="pillars-stage">
-                <p class="pillars-hint">Click any carved granite pillar below to hear its synthesized resonant Swara:</p>
-                <div class="pillars-row" id="pillars-row"></div>
-                <div class="pillars-controls">
-                  <button id="play-raga-btn" class="btn-gold small" type="button">▶ Play Classical Swara Sequence</button>
-                  <span id="pillar-note-display" class="note-badge">Ready — Tap a Pillar</span>
-                </div>
-              </div>
-            </div>
-            <div class="lab-info">
-              <h3>SaReGaMa Musical Pillars — Acoustic Engineering</h3>
-              <p>The grand <em>Ranga Mandapa</em> of the 16th-century <strong>Vijaya Vittala Temple</strong> in Hampi houses 56 sculpted monolithic granite pillars famously known as the <em>SaReGaMa Pillars</em>.</p>
-              <ul class="science-points">
-                <li><strong>Monolithic Cluster Design:</strong> Each main column is carved from a single block of dense granite surrounded by slender colonnettes—never hollow, yet engineered to resonate when gently tapped.</li>
-                <li><strong>Frequency Tuning by Geometry:</strong> By varying column height, cross-sectional thickness, mineral density, and structural boundary tension, Vijayanagara artisans tuned individual colonnettes to emit distinct musical pitches mimicking percussive, stringed, and wind instruments.</li>
-                <li><strong>Heritage Preservation:</strong> Today, the Archaeological Survey of India protects these pillars from physical tapping to prevent microscopic wear; our interactive synthesizer lets you experience the acoustic concept digitally.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. INTERACTIVE HERITAGE MAP -->
-    <section id="map" class="section section-ivory">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="eyebrow">Geographic Cartography</span>
-          <h2>Interactive Heritage Map of India</h2>
-          <p class="section-desc">Click any golden monument marker across India to preview its architectural profile and jump straight into its exhibition dossier.</p>
-          <div class="lotus-divider" aria-hidden="true"><span></span>✦<span></span></div>
-        </div>
-
-        <div class="map-layout reveal">
-          <div class="india-map-frame">
-            <svg id="india-map-svg" viewBox="0 0 500 560" class="india-svg" role="img" aria-label="Interactive Heritage Map of India with 10 Monument Pins">
-              <!-- Subtle Latitude/Longitude Grid -->
-              <g stroke="rgba(140,98,57,0.16)" stroke-width="1" stroke-dasharray="4 4">
-                <line x1="0" y1="120" x2="500" y2="120"/><line x1="0" y1="240" x2="500" y2="240"/>
-                <line x1="0" y1="360" x2="500" y2="360"/><line x1="0" y1="480" x2="500" y2="480"/>
-                <line x1="125" y1="0" x2="125" y2="560"/><line x1="250" y1="0" x2="250" y2="560"/>
-                <line x1="375" y1="0" x2="375" y2="560"/>
+        <div class="lg:col-span-6">
+          <div class="rounded-2xl bg-maroon-dark p-5 border border-gold/40">
+            <svg viewBox="0 0 420 260" class="w-full h-auto">
+              <!-- Sky Arc -->
+              <path d="M 40 210 A 170 170 0 0 1 380 210" fill="none" stroke="#DFBD69" stroke-opacity="0.25" stroke-dasharray="4 4" stroke-width="1.5"/>
+              <!-- Sun -->
+              <g id="samrat-sun">
+                <circle cx="130" cy="70" r="14" fill="#F3C95D"/>
+                <circle cx="130" cy="70" r="22" fill="#F3C95D" fill-opacity="0.22"/>
               </g>
-              <!-- Stylized Cartographic Outline of India -->
-              <path class="india-outline" d="M188,36 L220,28 L252,44 L274,70 L264,104 L288,124 L318,144 L360,158 L412,150 L446,162 L462,182 L440,210 L422,202 L408,236 L390,224 L372,204 L344,218 L352,254 L316,286 L284,324 L268,364 L250,418 L224,478 L194,524 L176,518 L158,472 L144,414 L128,354 L120,302 L104,274 L74,264 L54,242 L72,218 L92,216 L76,192 L98,162 L134,142 L152,110 L166,76 Z" />
-              <!-- Compass Rose -->
-              <g transform="translate(432,482)" opacity="0.72">
-                <circle cx="0" cy="0" r="24" fill="none" stroke="#C59B38" stroke-width="1.2"/>
-                <polygon points="0,-20 4,-4 20,0 4,4 0,20 -4,4 -20,0 -4,-4" fill="#C59B38"/>
-                <text x="0" y="-28" text-anchor="middle" fill="#5C1420" font-size="11" font-weight="700">N</text>
-              </g>
-              <!-- Region Labels -->
-              <text x="128" y="195" class="map-region-label">RAJASTHAN</text>
-              <text x="235" y="185" class="map-region-label">UTTAR PRADESH</text>
-              <text x="155" y="315" class="map-region-label">MAHARASHTRA</text>
-              <text x="158" y="405" class="map-region-label">KARNATAKA</text>
-              <text x="228" y="472" class="map-region-label">TAMIL NADU</text>
-              <!-- Dynamic Pins Container -->
-              <g id="map-pins"></g>
+              <!-- Sunlight Ray -->
+              <line id="samrat-ray" x1="130" y1="70" x2="210" y2="115" stroke="#F3C95D" stroke-width="1.5" stroke-dasharray="5 4" stroke-opacity="0.7"/>
+              <!-- Shadow Line on Quadrant -->
+              <line id="samrat-shadow" x1="210" y1="115" x2="290" y2="195" stroke="#110407" stroke-width="6" stroke-linecap="round" stroke-opacity="0.8"/>
+              <!-- Curved Quadrants -->
+              <path d="M 85 165 Q 140 222 210 210" fill="none" stroke="#FAF6EE" stroke-width="8" stroke-linecap="round"/>
+              <path d="M 335 165 Q 280 222 210 210" fill="none" stroke="#FAF6EE" stroke-width="8" stroke-linecap="round"/>
+              <!-- Gnomon Wall -->
+              <polygon points="180,218 240,218 210,112" fill="#C59B38" stroke="#FAF6EE" stroke-width="1.5"/>
+              <!-- Base Platform -->
+              <rect x="30" y="218" width="360" height="14" rx="4" fill="#5C1420" stroke="#DFBD69" stroke-width="1"/>
+              <!-- Labels -->
+              <text x="52" y="248" fill="#F3E3B6" font-size="11" font-family="Cinzel, serif">WEST QUADRANT (AM)</text>
+              <text x="255" y="248" fill="#F3E3B6" font-size="11" font-family="Cinzel, serif">EAST QUADRANT (PM)</text>
+              <text x="166" y="103" fill="#DFBD69" font-size="10" font-family="sans-serif">Gnomon (26.92° N)</text>
             </svg>
           </div>
-
-          <aside id="map-preview-card" class="map-preview-card" aria-live="polite"></aside>
         </div>
       </div>
-    </section>
 
-    <!-- 8. OUR PROJECT TEAM -->
-    <section id="team" class="section section-parchment">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="eyebrow">Walchand College of Engineering, Sangli • 2026–27</span>
-          <h2>The Minds Behind Indian Marvels</h2>
-          <p class="section-desc">Presented as part of the Indian Knowledge System (IKS) curriculum under expert faculty mentorship.</p>
-          <div class="lotus-divider" aria-hidden="true"><span></span>✦<span></span></div>
-        </div>
+      <!-- LAB 2: JAI PRAKASH & RAM YANTRA -->
+      <div id="lab-jaiprakash" class="lab-panel hidden grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-6">
+          <span class="inline-block px-3 py-1 rounded-full bg-maroon text-gold-pale font-display text-[10px] tracking-[0.2em] uppercase">
+            Spherical Astronomy · Jaipur
+          </span>
+          <h3 class="mt-3 font-display text-2xl sm:text-3xl font-bold text-maroon">
+            Jai Prakash &amp; Ram Yantra
+          </h3>
+          <p class="mt-3 text-sm text-ink/80 leading-relaxed">
+            <strong>Jai Prakash Yantra</strong> consists of two complementary sunken marble hemispheres representing an inverted map of the celestial dome. Crosswires suspended above cast a shadow inside the bowl, revealing the Sun's exact zodiac sign, declination, and right ascension, while carved passages allow astronomers to walk directly inside the hemisphere.
+          </p>
+          <p class="mt-3 text-sm text-ink/80 leading-relaxed">
+            <strong>Ram Yantra</strong> comprises two open cylindrical structures with a central vertical gnomon and radial stone sectors that accurately measure celestial <strong>altitude</strong> and <strong>azimuth</strong>.
+          </p>
 
-        <div id="team-grid" class="team-grid reveal"></div>
-
-        <div class="guide-card reveal">
-          <div class="guide-badge">Faculty Guide &amp; Mentor</div>
-          <h3>Prof. Surendra Rathod</h3>
-          <p class="guide-inst">Walchand College of Engineering, Sangli &nbsp;•&nbsp; Academic Year 2026–27</p>
-          <p class="guide-note">Departmental Guidance for Indian Knowledge System (IKS) Project — <em>INDIAN MARVELS</em></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 9. REFERENCES & ACKNOWLEDGEMENT -->
-    <section id="references" class="section section-ivory">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="eyebrow">Academic Integrity &amp; Gratitude</span>
-          <h2>References &amp; Acknowledgement</h2>
-          <div class="lotus-divider" aria-hidden="true"><span></span>✦<span></span></div>
-        </div>
-
-        <div class="ref-grid reveal">
-          <div class="ref-card">
-            <h3>Primary &amp; Verified Sources</h3>
-            <ol id="references-list" class="ref-list"></ol>
-            <p class="ref-disclaimer">
-              <em>Note on Historical Verification:</em> Primary monument selections and thematic curation are grounded in the WCE Sangli <strong>Indian Marvels</strong> IKS project documentation. Supplementary architectural measurements and dates are verified against Archaeological Survey of India (ASI) and UNESCO World Heritage records.
-            </p>
-          </div>
-
-          <div class="ack-card">
-            <span class="ack-ornament" aria-hidden="true">✦</span>
-            <h3>Acknowledgement</h3>
-            <p>
-              We express our heartfelt gratitude to our esteemed Faculty Guide, <strong>Prof. Surendra Rathod</strong>, for his continuous encouragement, insightful reviews, and unwavering guidance throughout the conception and realization of <strong>INDIAN MARVELS</strong>.
-            </p>
-            <p>
-              We sincerely thank the administration, faculty, and Indian Knowledge System coordinators at <strong>Walchand College of Engineering, Sangli</strong> for providing the academic platform to study and celebrate India's engineering and architectural legacy.
-            </p>
-            <p>
-              Finally, we extend our deepest appreciation to our <strong>families and friends</strong> whose support, feedback, and motivation helped bring this digital museum to life during the Academic Year 2026–27.
-            </p>
+          <div class="mt-5 p-5 rounded-2xl bg-ivory ornate-border space-y-4">
+            <div>
+              <div class="flex justify-between text-xs font-display font-bold uppercase text-maroon mb-1">
+                <span>Celestial Altitude (0° – 90°)</span>
+                <span id="jp-alt-val" class="text-gold-bronze">52°</span>
+              </div>
+              <input id="jp-alt" type="range" min="10" max="85" value="52" oninput="updateCelestial()" class="w-full accent-[#5C1420] cursor-pointer" />
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-display font-bold uppercase text-maroon mb-1">
+                <span>Azimuth Bearing (0° – 360°)</span>
+                <span id="jp-az-val" class="text-gold-bronze">135° (SE)</span>
+              </div>
+              <input id="jp-az" type="range" min="0" max="360" value="135" oninput="updateCelestial()" class="w-full accent-[#5C1420] cursor-pointer" />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-  </main>
 
-  <!-- 10. FOOTER -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <h3>INDIAN MARVELS</h3>
-          <p>An interactive digital museum celebrating India's timeless heritage in architecture, structural engineering, astronomy, sculpture, and art.</p>
-          <p class="footer-motto">"Exploring Our Heritage, Inspiring Our Future."</p>
-        </div>
-        <div class="footer-links">
-          <h4>Exhibition Sections</h4>
-          <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About Project</a></li>
-            <li><a href="#monuments">Explore Monuments</a></li>
-            <li><a href="#architecture">Architecture</a></li>
-            <li><a href="#gallery">Sculpture Gallery</a></li>
-            <li><a href="#science">Science &amp; Innovation</a></li>
-          </ul>
-        </div>
-        <div class="footer-meta">
-          <h4>Academic Presentation</h4>
-          <p><strong>Walchand College of Engineering, Sangli</strong></p>
-          <p>Indian Knowledge System (IKS) Project</p>
-          <p>Academic Year 2026–27</p>
-          <p>Guide: Prof. Surendra Rathod</p>
+        <div class="lg:col-span-6">
+          <div class="rounded-2xl bg-maroon-dark p-6 border border-gold/40">
+            <svg viewBox="0 0 400 280" class="w-full h-auto">
+              <!-- Outer Hemisphere Ring -->
+              <circle cx="200" cy="140" r="108" fill="#3D0D15" stroke="#DFBD69" stroke-width="2"/>
+              <circle cx="200" cy="140" r="76" fill="none" stroke="#DFBD69" stroke-opacity="0.35" stroke-dasharray="3 3"/>
+              <circle cx="200" cy="140" r="44" fill="none" stroke="#DFBD69" stroke-opacity="0.35" stroke-dasharray="3 3"/>
+              <!-- Radial Sectors (Ram Yantra / Jai Prakash Walkways) -->
+              <line x1="92" y1="140" x2="308" y2="140" stroke="#FAF6EE" stroke-opacity="0.35"/>
+              <line x1="200" y1="32" x2="200" y2="248" stroke="#FAF6EE" stroke-opacity="0.35"/>
+              <line x1="124" y1="64" x2="276" y2="216" stroke="#DFBD69" stroke-opacity="0.25"/>
+              <line x1="276" y1="64" x2="124" y2="216" stroke="#DFBD69" stroke-opacity="0.25"/>
+              <!-- Crosswire Center Ring -->
+              <circle cx="200" cy="140" r="5" fill="#DFBD69"/>
+              <!-- Live Shadow Marker -->
+              <line id="jp-vector" x1="200" y1="140" x2="240" y2="180" stroke="#F3C95D" stroke-width="2" stroke-dasharray="4 3"/>
+              <circle id="jp-dot" cx="240" cy="180" r="8" fill="#F3C95D" stroke="#2B0B10" stroke-width="2"/>
+              <!-- Cardinal Labels -->
+              <text x="195" y="22" fill="#F3E3B6" font-size="11" font-family="Cinzel, serif">N</text>
+              <text x="196" y="268" fill="#F3E3B6" font-size="11" font-family="Cinzel, serif">S</text>
+              <text x="318" y="144" fill="#F3E3B6" font-size="11" font-family="Cinzel, serif">E</text>
+              <text x="72" y="144" fill="#F3E3B6" font-size="11" font-family="Cinzel, serif">W</text>
+              <text x="18" y="266" fill="#DFBD69" font-size="10" font-family="sans-serif">Live Hemispherical Shadow Plot</text>
+            </svg>
+          </div>
         </div>
       </div>
-      <div class="footer-bottom">
-        <span>© 2026–27 INDIAN MARVELS — Walchand College of Engineering, Sangli.</span>
-        <span>Built for Indian Knowledge System (IKS) Exhibition.</span>
+
+      <!-- LAB 3: VIRUPAKSHA PINHOLE CAMERA -->
+      <div id="lab-pinhole" class="lab-panel hidden grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-6">
+          <span class="inline-block px-3 py-1 rounded-full bg-maroon text-gold-pale font-display text-[10px] tracking-[0.2em] uppercase">
+            Architectural Optics · Hampi
+          </span>
+          <h3 class="mt-3 font-display text-2xl sm:text-3xl font-bold text-maroon">
+            The Pinhole Camera Effect at Virupaksha Temple
+          </h3>
+          <p class="mt-3 text-sm sm:text-base text-ink/80 leading-relaxed">
+            Inside a darkened inner hall behind the main sanctum of the <strong>Virupaksha Temple</strong>, sunlight enters through a small, narrow stone aperture facing the towering 50-meter eastern Raya Gopuram. Because light travels in straight lines (<em>rectilinear propagation</em>), rays from the pinnacle of the tower pass downward while rays from the base pass upward, casting a remarkably crisp, <strong>inverted silhouette</strong> of the gopuram onto the rear stone wall.
+          </p>
+
+          <div class="mt-6 p-5 rounded-2xl bg-ivory ornate-border">
+            <div class="flex items-center justify-between mb-2">
+              <label for="aperture-slider" class="font-display text-xs font-bold tracking-[0.14em] uppercase text-maroon">
+                Stone Aperture Size
+              </label>
+              <span id="aperture-label" class="font-display text-sm font-bold text-gold-bronze">Sharp Focus (Optimal Slit)</span>
+            </div>
+            <input id="aperture-slider" type="range" min="1" max="10" value="2" oninput="updatePinhole(this.value)" class="w-full accent-[#5C1420] cursor-pointer" />
+            <p class="mt-2 text-xs text-ink/70">
+              Slide right to widen the stone slit and observe how overlapping rays blur the inverted gopuram projection.
+            </p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6">
+          <div class="rounded-2xl bg-maroon-dark p-5 border border-gold/40">
+            <svg viewBox="0 0 440 250" class="w-full h-auto">
+              <!-- Exterior Gopuram (Upright) -->
+              <polygon points="55,195 95,195 85,110 75,62 65,110" fill="#C59B38" stroke="#FAF6EE" stroke-width="1.2"/>
+              <text x="42" y="216" fill="#F3E3B6" font-size="10" font-family="Cinzel, serif">RAYA GOPURAM</text>
+
+              <!-- Dark Chamber Box -->
+              <rect x="215" y="40" width="195" height="170" fill="#180509" stroke="#DFBD69" stroke-width="1.5"/>
+              <!-- Aperture Wall Gap -->
+              <line x1="215" y1="40" x2="215" y2="117" stroke="#DFBD69" stroke-width="4"/>
+              <line x1="215" y1="133" x2="215" y2="210" stroke="#DFBD69" stroke-width="4"/>
+
+              <!-- Optical Rays Crossing at Pinhole -->
+              <line x1="75" y1="62" x2="380" y2="178" stroke="#F3C95D" stroke-width="1.6" stroke-dasharray="5 3"/>
+              <line x1="75" y1="195" x2="380" y2="75" stroke="#DFBD69" stroke-width="1.6" stroke-dasharray="5 3"/>
+
+              <!-- Projected Inverted Gopuram on Inner Wall -->
+              <g id="pinhole-projection" style="filter: blur(0.4px);">
+                <polygon points="365,75 395,75 388,138 380,178 372,138" fill="#F3C95D" fill-opacity="0.88"/>
+              </g>
+
+              <text x="180" y="30" fill="#DFBD69" font-size="10" font-family="sans-serif">Stone Aperture</text>
+              <text x="276" y="226" fill="#F3E3B6" font-size="10" font-family="Cinzel, serif">INVERTED PROJECTION</text>
+            </svg>
+          </div>
+        </div>
       </div>
+
+      <!-- LAB 4: MUSICAL PILLARS -->
+      <div id="lab-pillars" class="lab-panel hidden grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-5">
+          <span class="inline-block px-3 py-1 rounded-full bg-maroon text-gold-pale font-display text-[10px] tracking-[0.2em] uppercase">
+            Lithophonic Acoustics · Hampi
+          </span>
+          <h3 class="mt-3 font-display text-2xl sm:text-3xl font-bold text-maroon">
+            Musical Pillars of Vijaya Vittala Temple
+          </h3>
+          <p class="mt-3 text-sm sm:text-base text-ink/80 leading-relaxed">
+            The <em>Ranga Mantapa</em> of Vijaya Vittala Temple features 56 sculpted monolithic granite columns—known as <strong>SaReGaMa Pillars</strong>. Each main shaft is surrounded by slender colonnettes carved from resonating granite rich in silica and metallic minerals; when gently tapped, they emit distinct classical Indian musical notes (<em>swaras</em>) resembling percussive and stringed instruments.
+          </p>
+
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button onclick="playRagaDemo()" class="px-5 py-3 rounded-full bg-maroon text-gold-pale font-display text-xs font-bold tracking-[0.14em] uppercase hover:bg-maroon-light transition shadow">
+              ▶ Play Classical Swara Sequence
+            </button>
+          </div>
+          <p id="pillar-status" class="mt-3 text-xs font-medium text-gold-bronze">
+            Click or tap any granite pillar to hear its resonant swara frequency.
+          </p>
+        </div>
+
+        <div class="lg:col-span-7">
+          <div class="rounded-2xl bg-maroon-dark p-6 border border-gold/40">
+            <div class="flex items-end justify-between gap-2 sm:gap-3 h-64 pt-6 pb-2 px-2">
+              <!-- 7 Playable Swara Pillars -->
+              <button onclick="strikePillar(0, 261.63, 'Sa (Shadja) — 261.6 Hz')" id="pillar-0" class="flex-1 h-[96%] rounded-t-xl bg-gradient-to-b from-gold-light via-gold to-gold-bronze border border-ivory/40 flex flex-col items-center justify-between py-3 text-maroon-dark hover:brightness-110 transition cursor-pointer">
+                <span class="font-display text-xs font-bold">SA</span>
+                <span class="w-1.5 flex-1 my-2 rounded-full bg-maroon-dark/25"></span>
+                <span class="text-[10px] font-bold">C4</span>
+              </button>
+              <button onclick="strikePillar(1, 293.66, 'Re (Rishabha) — 293.7 Hz')" id="pillar-1" class="flex-1 h-[90%] rounded-t-xl bg-gradient-to-b from-gold-light via-gold to-gold-bronze border border-ivory/40 flex flex-col items-center justify-between py-3 text-maroon-dark hover:brightness-110 transition cursor-pointer">
+                <span class="font-display text-xs font-bold">RE</span>
+                <span class="w-1.5 flex-1 my-2 rounded-full bg-maroon-dark/25"></span>
+                <span class="text-[10px] font-bold">D4</span>
+              </button>
+              <button onclick="strikePillar(2, 329.63, 'Ga (Gandhara) — 329.6 Hz')" id="pillar-2" class="flex-1 h-[84%] rounded-t-xl bg-gradient-to-b from-gold-light via-gold to-gold-bronze border border-ivory/40 flex flex-col items-center justify-between py-3 text-maroon-dark hover:brightness-110 transition cursor-pointer">
+                <span class="font-display text-xs font-bold">GA</span>
+                <span class="w-1.5 flex-1 my-2 rounded-full bg-maroon-dark/25"></span>
+                <span class="text-[10px] font-bold">E4</span>
+              </button>
+              <button onclick="strikePillar(3, 349.23, 'Ma (Madhyama) — 349.2 Hz')" id="pillar-3" class="flex-1 h-[78%] rounded-t-xl bg-gradient-to-b from-gold-light via-gold to-gold-bronze border border-ivory/40 flex flex-col items-center justify-between py-3 text-maroon-dark hover:brightness-110 transition cursor-pointer">
+                <span class="font-display text-xs font-bold">MA</span>
+                <span class="w-1.5 flex-1 my-2 rounded-full bg-maroon-dark/25"></span>
+                <span class="text-[10px] font-bold">F4</span>
+              </button>
+              <button onclick="strikePillar(4, 392.00, 'Pa (Panchama) — 392.0 Hz')" id="pillar-4" class="flex-1 h-[72%] rounded-t-xl bg-gradient-to-b from-gold-light via-gold to-gold-bronze border border-ivory/40 flex flex-col items-center justify-between py-3 text-maroon-dark hover:brightness-110 transition cursor-pointer">
+                <span class="font-display text-xs font-bold">PA</span>
+                <span class="w-1.5 flex-1 my-2 rounded-full bg-maroon-dark/25"></span>
+                <span class="text-[10px] font-bold">G4</span>
+              </button>
+              <button onclick="strikePillar(5, 440.00, 'Dha (Dhaivata) — 440.0 Hz')" id="pillar-5" class="flex-1 h-[66%] rounded-t-xl bg-gradient-to-b from-gold-light via-gold to-gold-bronze border border-ivory/40 flex flex-col items-center justify-between py-3 text-maroon-dark hover:brightness-110 transition cursor-pointer">
+                <span class="font-display text-xs font-bold">DHA</span>
+                <span class="w-1.5 flex-1 my-2 rounded-full bg-maroon-dark/25"></span>
+                <span class="text-[10px] font-bold">A4</span>
+              </button>
+              <button onclick="strikePillar(6, 493.88, 'Ni (Nishada) — 493.9 Hz')" id="pillar-6" class="flex-1 h-[60%] rounded-t-xl bg-gradient-to-b from-gold-light via-gold to-gold-bronze border border-ivory/40 flex flex-col items-center justify-between py-3 text-maroon-dark hover:brightness-110 transition cursor-pointer">
+                <span class="font-display text-xs font-bold">NI</span>
+                <span class="w-1.5 flex-1 my-2 rounded-full bg-maroon-dark/25"></span>
+                <span class="text-[10px] font-bold">B4</span>
+              </button>
+            </div>
+            <div class="h-3 rounded-full bg-maroon border border-gold/40 mt-1"></div>
+            <p class="mt-3 text-center text-[11px] tracking-[0.18em] uppercase text-gold-pale/75 font-display">
+              Interactive Acoustic Granite Colonnette Simulator (Web Audio API)
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== INTERACTIVE HERITAGE MAP ==================== -->
+  <section id="heritage-map" class="py-24 bg-parchment/70 border-y border-gold/25">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto">
+        <p class="font-display text-xs font-bold tracking-[0.25em] uppercase text-gold-bronze mb-2">
+          Geographical Atlas of Indian Heritage
+        </p>
+        <h2 class="font-display text-3xl sm:text-5xl font-bold text-maroon">
+          Interactive Heritage Map of India
+        </h2>
+        <p class="mt-4 font-serif text-lg sm:text-xl text-ink/80">
+          Click any golden marker across India to preview the monument and jump directly into its exhibition dossier.
+        </p>
+      </div>
+
+      <div class="mt-12 grid lg:grid-cols-12 gap-8 items-center">
+        <!-- SVG Map of India -->
+        <div class="lg:col-span-7 relative rounded-3xl bg-maroon-dark p-6 sm:p-8 border border-gold/40 shadow-xl">
+          <div class="relative w-full max-w-lg mx-auto aspect-[4/4.6]">
+            <!-- Stylized Cartographic Silhouette of India -->
+            <svg viewBox="0 0 400 460" class="w-full h-full">
+              <defs>
+                <linearGradient id="indiaFill" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#6B1B29"/>
+                  <stop offset="100%" stop-color="#450F18"/>
+                </linearGradient>
+              </defs>
+              <!-- Gridlines -->
+              <line x1="0" y1="115" x2="400" y2="115" stroke="#DFBD69" stroke-opacity="0.12" stroke-dasharray="4 4"/>
+              <line x1="0" y1="230" x2="400" y2="230" stroke="#DFBD69" stroke-opacity="0.12" stroke-dasharray="4 4"/>
+              <line x1="0" y1="345" x2="400" y2="345" stroke="#DFBD69" stroke-opacity="0.12" stroke-dasharray="4 4"/>
+              <line x1="200" y1="0" x2="200" y2="460" stroke="#DFBD69" stroke-opacity="0.12" stroke-dasharray="4 4"/>
+
+              <!-- India Main Landmass Path -->
+              <path
+                d="M150,24 L182,18 L206,38 L226,50 L216,74 L234,92 L228,112 L252,126 L284,132 L304,122 L326,128 L348,118 L368,136 L352,162 L338,164 L328,186 L316,170 L294,174 L276,196 L256,222 L242,248 L216,276 L196,312 L192,350 L176,392 L156,422 L140,404 L126,368 L114,322 L100,276 L96,232 L72,216 L54,200 L66,184 L84,186 L74,162 L92,138 L114,114 L132,96 L128,74 L144,54 Z"
+                fill="url(#indiaFill)"
+                stroke="#DFBD69"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+              <!-- Compass Rose -->
+              <g transform="translate(345,395)" stroke="#DFBD69" stroke-opacity="0.55" fill="none">
+                <circle cx="0" cy="0" r="20" stroke-width="1"/>
+                <path d="M0,-24 L4,-4 L24,0 L4,4 L0,24 L-4,4 L-24,0 L-4,-4 Z" fill="#DFBD69" fill-opacity="0.25"/>
+                <text x="-4" y="-28" fill="#F3E3B6" font-size="9" font-family="Cinzel, serif" stroke="none">N</text>
+              </g>
+            </svg>
+
+            <!-- Interactive Monument Markers Overlay -->
+            <div id="map-markers" class="absolute inset-0">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          <p class="mt-3 text-center text-[11px] tracking-[0.2em] uppercase text-gold-pale/75 font-display">
+            10 Featured Heritage Sites Across 5 Indian States
+          </p>
+        </div>
+
+        <!-- Map Spotlight Card -->
+        <div id="map-spotlight" class="lg:col-span-5">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== OUR PROJECT TEAM ==================== -->
+  <section id="team" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="text-center max-w-3xl mx-auto">
+      <p class="font-display text-xs font-bold tracking-[0.25em] uppercase text-gold-bronze mb-2">
+        Walchand College of Engineering, Sangli · Academic Year 2026–27
+      </p>
+      <h2 class="font-display text-3xl sm:text-5xl font-bold text-maroon">
+        The Minds Behind Indian Marvels
+      </h2>
+      <p class="mt-4 font-serif text-lg sm:text-xl text-ink/80">
+        Research, curation, historical documentation, and interactive museum design by our IKS project team.
+      </p>
+    </div>
+
+    <!-- Faculty Guide Highlight Card -->
+    <div class="mt-12 max-w-2xl mx-auto p-6 sm:p-7 rounded-3xl bg-gradient-to-r from-maroon-dark via-maroon to-maroon-dark text-ivory border border-gold/45 shadow-lg flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+      <div class="w-20 h-20 rounded-full border-2 border-gold-light bg-maroon-deep flex items-center justify-center font-display text-2xl font-bold text-gold-light shrink-0">
+        SR
+      </div>
+      <div>
+        <span class="inline-block px-3 py-0.5 rounded-full bg-gold/20 border border-gold/45 text-[10px] font-display tracking-[0.2em] uppercase text-gold-pale mb-1.5">
+          Faculty Guide
+        </span>
+        <h3 class="font-display text-2xl font-bold text-ivory">Prof. Surendra Rathod</h3>
+        <p class="text-sm text-gold-pale/85 mt-1">
+          Indian Knowledge System (IKS) · Walchand College of Engineering, Sangli
+        </p>
+      </div>
+    </div>
+
+    <!-- 4 Student Team Cards -->
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="heritage-card p-6 rounded-2xl bg-parchment/90 ornate-border text-center">
+        <div class="w-16 h-16 mx-auto rounded-full bg-maroon text-gold-light font-display text-xl font-bold flex items-center justify-center border-2 border-gold/60">
+          PS
+        </div>
+        <h3 class="mt-4 font-display text-base font-bold text-maroon">Prem Vinayak Surange</h3>
+        <p class="mt-1 text-xs font-semibold tracking-[0.14em] uppercase text-gold-bronze">Roll No. 265109015</p>
+        <p class="mt-3 text-xs text-ink/75">Walchand College of Engineering, Sangli</p>
+      </div>
+
+      <div class="heritage-card p-6 rounded-2xl bg-parchment/90 ornate-border text-center">
+        <div class="w-16 h-16 mx-auto rounded-full bg-maroon text-gold-light font-display text-xl font-bold flex items-center justify-center border-2 border-gold/60">
+          AJ
+        </div>
+        <h3 class="mt-4 font-display text-base font-bold text-maroon">Aditya Keshaorao Jadhao</h3>
+        <p class="mt-1 text-xs font-semibold tracking-[0.14em] uppercase text-gold-bronze">Roll No. 265109004</p>
+        <p class="mt-3 text-xs text-ink/75">Walchand College of Engineering, Sangli</p>
+      </div>
+
+      <div class="heritage-card p-6 rounded-2xl bg-parchment/90 ornate-border text-center">
+        <div class="w-16 h-16 mx-auto rounded-full bg-maroon text-gold-light font-display text-xl font-bold flex items-center justify-center border-2 border-gold/60">
+          MJ
+        </div>
+        <h3 class="mt-4 font-display text-base font-bold text-maroon">Manthan Ashok Jumrani</h3>
+        <p class="mt-1 text-xs font-semibold tracking-[0.14em] uppercase text-gold-bronze">Roll No. 265109017</p>
+        <p class="mt-3 text-xs text-ink/75">Walchand College of Engineering, Sangli</p>
+      </div>
+
+      <div class="heritage-card p-6 rounded-2xl bg-parchment/90 ornate-border text-center">
+        <div class="w-16 h-16 mx-auto rounded-full bg-maroon text-gold-light font-display text-xl font-bold flex items-center justify-center border-2 border-gold/60">
+          NB
+        </div>
+        <h3 class="mt-4 font-display text-base font-bold text-maroon">Nitin Jagan Bhoyar</h3>
+        <p class="mt-1 text-xs font-semibold tracking-[0.14em] uppercase text-gold-bronze">Roll No. 265109005</p>
+        <p class="mt-3 text-xs text-ink/75">Walchand College of Engineering, Sangli</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== REFERENCES & ACKNOWLEDGEMENT ==================== -->
+  <section id="references" class="py-24 bg-parchment/75 border-t border-gold/25">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10">
+      <!-- References -->
+      <div class="lg:col-span-7 p-8 rounded-3xl bg-ivory ornate-border shadow-sm">
+        <p class="font-display text-xs font-bold tracking-[0.22em] uppercase text-gold-bronze mb-2">
+          Sources &amp; Archival Documentation
+        </p>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-maroon mb-6">
+          References
+        </h2>
+        <ul class="space-y-4 text-sm text-ink/85 leading-relaxed">
+          <li class="flex gap-3">
+            <span class="font-display font-bold text-gold-bronze">01.</span>
+            <span><strong>Indian Marvels — Primary Project Documentation (2026–27)</strong>, Indian Knowledge System (IKS) Course Submission, Walchand College of Engineering, Sangli.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="font-display font-bold text-gold-bronze">02.</span>
+            <span><strong>Archaeological Survey of India (ASI)</strong> — Official monument monographs and conservation archives covering Hampi, Ellora Caves, Belur, Somnathapura, Chittorgarh, Deogarh, and Lucknow.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="font-display font-bold text-gold-bronze">03.</span>
+            <span><strong>UNESCO World Heritage Centre</strong> — Official nomination dossiers for the Group of Monuments at Hampi, Ellora Caves, The Jantar Mantar (Jaipur), Hill Forts of Rajasthan, and Sacred Ensembles of the Hoysalas.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="font-display font-bold text-gold-bronze">04.</span>
+            <span><strong>Wikimedia Commons Cultural Heritage Media Archive</strong> — Open-licensed historical monument and sculpture photography credited under Creative Commons licenses.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Acknowledgement -->
+      <div class="lg:col-span-5 p-8 rounded-3xl bg-maroon-dark text-ivory border border-gold/40 shadow-lg flex flex-col justify-between">
+        <div>
+          <p class="font-display text-xs font-bold tracking-[0.22em] uppercase text-gold-light mb-2">
+            Gratitude
+          </p>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-ivory mb-5">
+            Acknowledgement
+          </h2>
+          <p class="font-serif text-lg text-gold-pale/90 leading-relaxed mb-4">
+            We express our sincere gratitude to our faculty guide, <strong>Prof. Surendra Rathod</strong>, for his invaluable guidance, encouragement, and scholarly mentorship throughout the development of <em>Indian Marvels</em>.
+          </p>
+          <p class="text-sm text-ivory/80 leading-relaxed">
+            We extend our heartfelt thanks to <strong>Walchand College of Engineering, Sangli</strong> for fostering deep appreciation of the Indian Knowledge System, and to our families and friends whose unwavering support made this digital exhibition possible.
+          </p>
+        </div>
+        <div class="mt-6 pt-5 border-t border-gold/25 flex items-center justify-between text-xs text-gold-pale/80 font-display tracking-[0.14em] uppercase">
+          <span>WCE Sangli</span>
+          <span>Academic Year 2026–27</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-maroon-dark text-ivory border-t border-gold/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid md:grid-cols-12 gap-10">
+      <div class="md:col-span-5">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-full border border-gold/60 bg-maroon-deep flex items-center justify-center">
+            <span class="font-display text-sm font-bold text-gold-light">IM</span>
+          </div>
+          <span class="font-display text-xl font-bold tracking-[0.18em] text-ivory">INDIAN MARVELS</span>
+        </div>
+        <p class="text-sm text-ivory/75 leading-relaxed max-w-md">
+          An interactive digital museum celebrating India's architectural, astronomical, sculptural, and engineering brilliance under the Indian Knowledge System (IKS) curriculum.
+        </p>
+        <p class="mt-4 font-serif italic text-gold-light text-lg">
+          "Exploring Our Heritage, Inspiring Our Future."
+        </p>
+      </div>
+
+      <div class="md:col-span-3">
+        <h4 class="font-display text-xs font-bold tracking-[0.2em] uppercase text-gold-light mb-4">Quick Navigation</h4>
+        <ul class="space-y-2 text-sm text-ivory/80">
+          <li><a href="#home" class="hover:text-gold-light transition">Home</a></li>
+          <li><a href="#about" class="hover:text-gold-light transition">About Project</a></li>
+          <li><a href="#monuments" class="hover:text-gold-light transition">Explore Monuments</a></li>
+          <li><a href="#architecture" class="hover:text-gold-light transition">Architecture</a></li>
+          <li><a href="#sculptures" class="hover:text-gold-light transition">Sculpture Gallery</a></li>
+          <li><a href="#science" class="hover:text-gold-light transition">Science &amp; Innovation</a></li>
+        </ul>
+      </div>
+
+      <div class="md:col-span-4">
+        <h4 class="font-display text-xs font-bold tracking-[0.2em] uppercase text-gold-light mb-4">Academic Institution</h4>
+        <p class="text-sm font-semibold text-ivory">Walchand College of Engineering, Sangli</p>
+        <p class="text-xs text-ivory/70 mt-1">Indian Knowledge System (IKS) Project</p>
+        <p class="text-xs text-gold-pale mt-1">Academic Year 2026–27</p>
+        <p class="text-xs text-ivory/65 mt-4">Faculty Guide: Prof. Surendra Rathod</p>
+      </div>
+    </div>
+    <div class="border-t border-gold/20 py-5 px-4 text-center text-xs text-ivory/60">
+      © 2026–27 INDIAN MARVELS · Walchand College of Engineering, Sangli · All Rights Reserved.
     </div>
   </footer>
 
-  <!-- FULL-SCREEN MONUMENT DETAIL DOSSIER MODAL -->
-  <div id="monument-modal" class="dossier-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="dossier-title">
-    <div class="dossier-topbar">
-      <button id="dossier-close" class="dossier-back-btn" type="button">← Back to Exhibition</button>
-      <div class="dossier-nav-controls">
-        <button id="dossier-prev" class="dossier-nav-btn" type="button">‹ Previous</button>
-        <span id="dossier-counter" class="dossier-counter">1 / 10</span>
-        <button id="dossier-next" class="dossier-nav-btn" type="button">Next ›</button>
-      </div>
-    </div>
-    <div id="dossier-body" class="dossier-body"></div>
+  <!-- ==================== MONUMENT DETAIL MODAL PAGE ==================== -->
+  <div id="monument-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-ivory">
+    <!-- Populated dynamically by JS -->
   </div>
 
-  <!-- FULL-SCREEN SCULPTURE & GALLERY LIGHTBOX -->
-  <div id="lightbox-modal" class="lightbox-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lightbox-title">
-    <button id="lightbox-close" class="lightbox-close" aria-label="Close Lightbox">✕</button>
-    <button id="lightbox-prev" class="lightbox-arrow left" aria-label="Previous Image">‹</button>
-    <button id="lightbox-next" class="lightbox-arrow right" aria-label="Next Image">›</button>
-    <div class="lightbox-content">
-      <div class="lightbox-img-wrap">
-        <img id="lightbox-img" src="" alt="" />
+  <!-- ==================== LIGHTBOX MODAL ==================== -->
+  <div id="lightbox-modal" class="fixed inset-0 z-[60] hidden bg-maroon-dark/95 backdrop-blur-lg flex items-center justify-center p-4 sm:p-8">
+    <button onclick="closeLightbox()" aria-label="Close Lightbox" class="absolute top-5 right-5 w-11 h-11 rounded-full bg-maroon border border-gold/50 text-gold-light hover:bg-maroon-light flex items-center justify-center text-xl transition">
+      ✕
+    </button>
+    <button onclick="navigateLightbox(-1)" aria-label="Previous Image" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-maroon/90 border border-gold/45 text-gold-light hover:bg-maroon-light flex items-center justify-center text-lg transition">
+      ‹
+    </button>
+    <button onclick="navigateLightbox(1)" aria-label="Next Image" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-maroon/90 border border-gold/45 text-gold-light hover:bg-maroon-light flex items-center justify-center text-lg transition">
+      ›
+    </button>
+
+    <div class="max-w-5xl w-full grid lg:grid-cols-12 gap-6 items-center bg-maroon-deep/90 border border-gold/35 rounded-3xl overflow-hidden shadow-2xl">
+      <div class="lg:col-span-7 bg-black/40 flex items-center justify-center max-h-[72vh] overflow-hidden">
+        <img id="lb-img" src="" alt="" class="w-full h-full max-h-[72vh] object-contain" />
       </div>
-      <div class="lightbox-caption">
-        <span id="lightbox-tag" class="eyebrow light-eyebrow"></span>
-        <h3 id="lightbox-title"></h3>
-        <p id="lightbox-desc"></p>
-        <p id="lightbox-sig" class="lightbox-sig"></p>
+      <div class="lg:col-span-5 p-6 sm:p-8 text-ivory">
+        <span id="lb-tag" class="inline-block px-3 py-1 rounded-full bg-gold/20 border border-gold/45 text-[10px] font-display tracking-[0.2em] uppercase text-gold-pale mb-3"></span>
+        <h3 id="lb-title" class="font-display text-2xl sm:text-3xl font-bold text-ivory"></h3>
+        <p id="lb-desc" class="mt-4 text-sm text-ivory/85 leading-relaxed"></p>
+        <div class="mt-5 pt-4 border-t border-gold/25">
+          <span class="block font-display text-[10px] tracking-[0.2em] uppercase text-gold-light mb-1">Cultural &amp; Historical Significance</span>
+          <p id="lb-sig" class="text-xs text-gold-pale/85 leading-relaxed"></p>
+        </div>
       </div>
     </div>
   </div>
 
-  <script src="data.js" defer></script>
-  <script src="app.js" defer></script>
+  <!-- ==================== APPLICATION SCRIPT ==================== -->
+  <script>
+    // ---------- RELIABLE IMAGE FALLBACK HELPER ----------
+    function wiki(filename, width = 1200) {
+      return 'https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent(filename) + '?width=' + width;
+    }
+
+    function createHeritageSvgFallback(title) {
+      const safeTitle = (title || 'Indian Marvels Archive').replace(/[<>&'"]/g, '');
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540">
+        <defs>
+          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#3D0D15"/>
+            <stop offset="50%" stop-color="#5C1420"/>
+            <stop offset="100%" stop-color="#2B0B10"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="540" fill="url(#bg)"/>
+        <rect x="24" y="24" width="752" height="492" fill="none" stroke="#DFBD69" stroke-opacity="0.35" stroke-width="2" rx="16"/>
+        <g stroke="#DFBD69" stroke-opacity="0.65" fill="none" stroke-width="2.2">
+          <path d="M260 350 H540"/>
+          <path d="M300 350 V225 C300 165 400 120 400 120 C400 120 500 165 500 225 V350"/>
+          <path d="M340 350 V245 C340 205 400 175 400 175 C400 175 460 205 460 245 V350"/>
+          <circle cx="400" cy="245" r="22"/>
+          <path d="M400 92 V120 M386 106 H414"/>
+        </g>
+        <text x="400" y="405" text-anchor="middle" fill="#DFBD69" font-family="Georgia, serif" font-size="16" letter-spacing="5">INDIAN MARVELS ARCHIVE</text>
+        <text x="400" y="440" text-anchor="middle" fill="#FAF6EE" font-family="Georgia, serif" font-size="22">${safeTitle}</text>
+      </svg>`;
+      return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+    }
+
+    function handleImgError(img, label) {
+      if (!img.dataset.triedFallback && img.dataset.fallback) {
+        img.dataset.triedFallback = 'true';
+        img.src = img.dataset.fallback;
+      } else if (!img.dataset.usedSvg) {
+        img.dataset.usedSvg = 'true';
+        img.src = createHeritageSvgFallback(label || img.alt);
+      }
+    }
+
+    // ---------- DATA: EXACT 10 MONUMENTS ----------
+    const MONUMENTS = [
+      {
+        id: 'keshava-somnathapura',
+        name: 'Keshava Temple',
+        location: 'Somnathapura, Karnataka',
+        state: 'Karnataka',
+        categories: ['Temples', 'Architecture'],
+        builtBy: 'Somanatha Dandanayaka (General under Hoysala King Narasimha III)',
+        period: '1268 CE (13th Century)',
+        technique: 'Hoysala Vesara Architecture · Chloritic Schist (Soapstone)',
+        coords: { left: 37.5, top: 77 },
+        image: wiki('Somanathapura_Keshava_Temple.jpg', 1100),
+        fallback: wiki('Keshava_temple_at_Somanathapura,_Mysore_district.jpg', 1100),
+        shortDesc: 'A crowning masterpiece of Hoysala artistry celebrated for its 16-pointed star-shaped triple shrine and filigree soapstone carvings.',
+        about: 'Consecrated in 1268 CE near the Kaveri River, the Keshava Temple at Somnathapura exemplifies the refined maturity of Hoysala temple architecture. Three symmetrical sanctums sit atop a raised stellate platform (jagati) inside a tranquil pillared courtyard lined with 64 peripheral cells.',
+        history: 'Built by Somanatha, a commander of Hoysala monarch Narasimha III, the temple anchored an agrahara (scholarly settlement). Stone inscriptions at the entrance record endowments, consecration dates, and the signatures of master sculptors such as Mallitamma.',
+        features: [
+          'Trikuta (triple-shrine) design originally dedicated to Keshava, Janardhana, and Venugopala.',
+          'Raised star-shaped (stellate) jagati platform engineered for rhythmic light-and-shadow play.',
+          'Six continuous horizontal narrative friezes depicting elephants, cavalry, Makaras, swans, and epics.',
+          'Lathe-turned, mirror-polished soapstone pillars supporting deeply recessed lotus ceilings.'
+        ],
+        sculptures: 'Signed wall-panel icons by Mallitamma, ornate Bhuvanesvari ceiling medallions, and narrative bands from the Ramayana, Mahabharata, and Bhagavata Purana.',
+        significance: 'Recognized within the UNESCO World Heritage Sacred Ensembles of the Hoysalas, demonstrating extraordinary precision in medieval stone geometry and lathe-turning.',
+        timeline: [
+          { year: '1268 CE', text: 'Consecration by Somanatha Dandanayaka under Narasimha III.' },
+          { year: '15th–16th C.', text: 'Documented conservation and patronage during the Vijayanagara era.' },
+          { year: '2023', text: 'Inscribed as part of the UNESCO Sacred Ensembles of the Hoysalas.' }
+        ],
+        gallery: [
+          { src: wiki('Somanathapura_Keshava_Temple.jpg', 1100), caption: 'Stellate triple-shrine plan atop the elevated jagati platform.' },
+          { src: wiki('Keshava_temple_at_Somanathapura,_Mysore_district.jpg', 1100), caption: 'Sculpted Vesara shikhara towers and perimeter pillared cloister.' }
+        ]
+      },
+      {
+        id: 'sundara-kamakshi',
+        name: 'Sundara Kamakshi Temple',
+        location: 'Tamil Nadu',
+        state: 'Tamil Nadu',
+        categories: ['Temples', 'Architecture'],
+        builtBy: 'Successive South Indian Royal Dynasties (Pallava, Chola & Vijayanagara patronage)',
+        period: 'Ancient Origin with Medieval Expansions (6th–16th Century CE)',
+        technique: 'Classical Dravidian Architecture · Granite, Dressed Stone & Gilded Vimana',
+        coords: { left: 45, top: 80.5 },
+        image: wiki('Kanchipuram_Kamakshi_Amman_Temple.jpg', 1100),
+        fallback: wiki('Kamakshi_Amman_Temple_in_Kancheepuram,_Tamil_Nadu.jpg', 1100),
+        shortDesc: 'A revered South Indian Shakti sanctuary exemplifying classical Dravidian temple geometry, towering gopurams, and sacred courtyards.',
+        about: 'Deeply woven into Tamil Nadu’s sacred temple tradition, the Kamakshi shrine honors Goddess Kamakshi as the compassionate embodiment of Shakti. Its expansive walled precincts (prakaras), pillared mandapas, and axial symmetry embody Agamic architectural principles.',
+        history: 'Originating in early medieval South India and expanded under Pallava, Chola, and Vijayanagara rulers, the temple complex evolved into a major cultural, musical, and spiritual landmark closely linked with Adi Shankaracharya’s Sri Chakra tradition.',
+        features: [
+          'Pyramidal multi-tiered Dravidian gopurams adorned with sculpted mythological narratives.',
+          'Concentric rectangular prakara enclosures designed for ritual circumambulation.',
+          'Pillared granite mandapas engineered for natural cross-ventilation and acoustics.',
+          'Sacred temple tank (pushkarini) supporting rainwater harvesting and ritual purity.'
+        ],
+        sculptures: 'Graceful iconographic forms of the Divine Mother, carved granite column capitals, yali motifs, and intricate stucco shrine narratives.',
+        significance: 'Represents the unbroken living continuity of Dravidian temple architecture, sacred geometry, and Tamil devotional heritage.',
+        timeline: [
+          { year: '6th–9th C.', text: 'Early Pallava architectural foundations and Shakti worship.' },
+          { year: '10th–14th C.', text: 'Chola and Pandya structural expansions and granite mandapas.' },
+          { year: '15th–16th C.', text: 'Vijayanagara additions including ornate gopurams and halls.' }
+        ],
+        gallery: [
+          { src: wiki('Kanchipuram_Kamakshi_Amman_Temple.jpg', 1100), caption: 'Classical Dravidian temple precinct and sacred tower.' },
+          { src: wiki('Kamakshi_Amman_Temple_in_Kancheepuram,_Tamil_Nadu.jpg', 1100), caption: 'Axial stone courtyard showcasing South Indian temple proportions.' }
+        ]
+      },
+      {
+        id: 'vijaya-vittala',
+        name: 'Vijaya Vittala Temple',
+        location: 'Hampi, Karnataka',
+        state: 'Karnataka',
+        categories: ['Temples', 'Architecture', 'Monuments'],
+        builtBy: 'Devaraya II & Expanded by Krishnadevaraya (Vijayanagara Empire)',
+        period: '15th–16th Century CE',
+        technique: 'Vijayanagara Dravidian Architecture · Interlocking Carved Granite',
+        coords: { left: 37, top: 69.5 },
+        image: wiki('Vittala_temple_stone_chariot.jpg', 1100),
+        fallback: wiki('Hampi_chariot.jpg', 1100),
+        shortDesc: 'Hampi’s architectural zenith, celebrated worldwide for its iconic Stone Chariot shrine and 56 resonant musical granite pillars.',
+        about: 'Dedicated to Lord Vittala (an aspect of Vishnu), the Vijaya Vittala Temple stands near the southern bank of the Tungabhadra River. Its vast walled enclosure houses the iconic Garuda Stone Chariot, the Maha Mantapa with its famed musical pillars, and the grand Kalyana Mantapa.',
+        history: 'Originally built in the 15th century under Devaraya II and lavishly enlarged during the reign of Emperor Krishnadevaraya (1509–1529 CE), the complex reflects the imperial grandeur and artistic patronage of the Vijayanagara capital.',
+        features: [
+          'Iconic Garuda Shrine sculpted as a temple chariot (Ratha) with finely carved stone wheels.',
+          'Ranga Mantapa featuring 56 monolithic granite Musical Pillars (SaReGaMa pillars).',
+          'Towering pillared halls with sculpted yalis, prancing horses, and floral brackets.',
+          'Precision dry-stone granite joinery built to endure centuries without mortar.'
+        ],
+        sculptures: 'The monumental Stone Chariot, acoustic colonnettes depicting musicians and dancers, ornate Garuda emblems, and narrative friezes of royal processions.',
+        significance: 'A centerpiece of the UNESCO World Heritage Group of Monuments at Hampi and a world-renowned marvel of lithophonic stone acoustics.',
+        timeline: [
+          { year: '15th C. CE', text: 'Initial foundation during the reign of Devaraya II.' },
+          { year: '1509–1529 CE', text: 'Major imperial expansion under Emperor Krishnadevaraya.' },
+          { year: '1986', text: 'Inscribed as part of the UNESCO World Heritage Site at Hampi.' }
+        ],
+        gallery: [
+          { src: wiki('Vittala_temple_stone_chariot.jpg', 1100), caption: 'The iconic Garuda Stone Chariot at the heart of the courtyard.' },
+          { src: wiki('Vittala_Temple_Hampi_Musical_Pillars.jpg', 1100), caption: 'Clustered granite musical pillars inside the Ranga Mantapa.' }
+        ]
+      },
+      {
+        id: 'chennakeshava-belur',
+        name: 'Chennakeshava Temple',
+        location: 'Belur, Karnataka',
+        state: 'Karnataka',
+        categories: ['Temples', 'Architecture'],
+        builtBy: 'King Vishnuvardhana (Hoysala Dynasty)',
+        period: '1117 CE (Completed over ~103 years)',
+        technique: 'Hoysala Architecture · Fine-Grained Chloritic Schist (Soapstone)',
+        coords: { left: 34.5, top: 75.5 },
+        image: wiki('Chennakesava_Temple,_Belur.jpg', 1100),
+        fallback: wiki('Belur_Chennakeshava_Temple.jpg', 1100),
+        shortDesc: 'Commissioned by King Vishnuvardhana in 1117 CE, renowned for its exquisite Madanika bracket figures and mirror-polished lathe pillars.',
+        about: 'Situated on the banks of the Yagachi River, the Chennakeshava Temple at Belur is a living temple that has remained in continuous worship for over nine centuries. It sets the benchmark for Hoysala sculptural refinement and intricate stone lacework (jali screens).',
+        history: 'Commissioned in 1117 CE by Hoysala King Vishnuvardhana to commemorate his triumph over the Cholas at Talakad, the temple’s artistic completion spanned three generations of royal patrons and guild artisans led by master sculptors such as Dasoja and Chavana.',
+        features: [
+          'Star-shaped sanctum resting on a broad platform enabling open-air pradakshina.',
+          '42 finely sculpted Madanika (celestial maiden) bracket figures flanking the eaves.',
+          '48 uniquely carved interior pillars, including the famous Narasimha and Mohini pillars.',
+          'Perforated stone window screens (jalis) filtering soft daylight into the navaranga hall.'
+        ],
+        sculptures: 'Darpana Sundari (Lady with Mirror), Shukasundari, Celestial Maiden with Musical Instrument, and the iconic Hoysala royal emblem of Sala battling the lion.',
+        significance: 'Inscribed on the UNESCO World Heritage list (2023), Belur stands as a supreme triumph of Indian sculpture, storytelling, and mechanical stone polishing.',
+        timeline: [
+          { year: '1117 CE', text: 'Commissioned by King Vishnuvardhana following victory at Talakad.' },
+          { year: '12th–13th C.', text: 'Addition of outer enclosures, gopuram, and subsidiary shrines.' },
+          { year: '2023', text: 'Inscribed in UNESCO’s Sacred Ensembles of the Hoysalas.' }
+        ],
+        gallery: [
+          { src: wiki('Chennakesava_Temple,_Belur.jpg', 1100), caption: 'Exterior elevation showing horizontal carved bands and Madanika brackets.' },
+          { src: wiki('Shilabalika_at_Belur.jpg', 1000), caption: 'Masterpiece Madanika celestial maiden carved in soapstone.' }
+        ]
+      },
+      {
+        id: 'virupaksha-hampi',
+        name: 'Virupaksha Temple',
+        location: 'Hampi, Karnataka',
+        state: 'Karnataka',
+        categories: ['Temples', 'Architecture', 'Monuments'],
+        builtBy: 'Chalukya & Hoysala origins; Expanded by Lakkan Dandesha & Krishnadevaraya',
+        period: '7th Century CE onwards (Major 15th–16th C. expansions)',
+        technique: 'Dravidian & Vijayanagara Architecture · Granite, Brick & Lime Plaster',
+        coords: { left: 35.5, top: 68.5 },
+        image: wiki('Virupaksha_Temple_Hampi.jpg', 1100),
+        fallback: wiki('Virupaksha_Temple,_Hampi.jpg', 1100),
+        shortDesc: 'One of India’s oldest continuously functioning temples, famed for its 50-meter Raya Gopuram and natural pinhole camera optical effect.',
+        about: 'Dedicated to Lord Virupaksha (a form of Shiva) and Goddess Pampadevi, this grand riverside complex forms the sacred axis of Hampi. Visitors enter through the soaring nine-tiered eastern Raya Gopuram into vast pillared courtyards and painted ceilings.',
+        history: 'Evolving from a 7th-century shrine, the temple flourished under the Chalukyas, Hoysalas, and Vijayanagara emperors. In 1510 CE, Krishnadevaraya added the ornate Ranga Mantapa and renovated the towering eastern gopuram to mark his coronation.',
+        features: [
+          '50-meter-tall nine-tiered Raya Gopuram aligned mathematically along the east-west axis.',
+          'Natural pinhole camera phenomenon projecting an inverted silhouette of the gopuram onto an inner dark wall.',
+          'Vijayanagara mural ceilings depicting Shiva, Vishnu avatars, and sage Vidyaranya’s procession.',
+          'Subterranean water channel diverted from the Tungabhadra River flowing through the temple kitchen.'
+        ],
+        sculptures: 'Ornate pillared shrines, three-headed Nandi monolith, carved Vijayanagara royal emblems, and intricate mythological ceiling panels.',
+        significance: 'Unites unbroken 1,300-year living devotion with remarkable ancient understanding of geometric optics, hydraulics, and structural alignment.',
+        timeline: [
+          { year: '7th C. CE', text: 'Earliest sanctum dedicated to Lord Virupaksha near Hemakuta Hill.' },
+          { year: '1510 CE', text: 'Krishnadevaraya builds the Ranga Mantapa and enhances the Raya Gopuram.' },
+          { year: 'Present', text: 'Remains an active sacred center within UNESCO World Heritage Hampi.' }
+        ],
+        gallery: [
+          { src: wiki('Virupaksha_Temple_Hampi.jpg', 1100), caption: 'The towering nine-tiered eastern Raya Gopuram overlooking Hampi Bazaar.' },
+          { src: wiki('Virupaksha_Temple,_Hampi.jpg', 1100), caption: 'Inner courtyard and pillared halls leading toward the main sanctum.' }
+        ]
+      },
+      {
+        id: 'kailasa-ellora',
+        name: 'Kailasa Temple',
+        location: 'Ellora, Maharashtra',
+        state: 'Maharashtra',
+        categories: ['Temples', 'Architecture', 'Monuments'],
+        builtBy: 'King Krishna I (Rashtrakuta Dynasty)',
+        period: 'c. 756–773 CE (8th Century)',
+        technique: 'Monolithic Top-Down Rock-Cut Architecture · Deccan Basalt',
+        coords: { left: 34, top: 53.5 },
+        image: wiki('Kailasa_temple_overview,_Ellora.jpg', 1100),
+        fallback: wiki('Ellora_cave16_001.jpg', 1100),
+        shortDesc: 'The world’s largest monolithic rock-cut structure—excavated top-down from a single basalt cliff to symbolize Mount Kailasa.',
+        about: 'Cave 16 at Ellora is not constructed by stacking blocks; it was carved entirely from top to bottom out of a single living basalt escarpment. Sculptors removed an estimated 200,000+ tonnes of rock to reveal a multi-storey temple complete with courtyard, life-sized elephants, victory pillars, and galleried cloisters.',
+        history: 'Commissioned by Rashtrakuta King Krishna I in the mid-8th century CE, Kailasa Temple required extraordinary pre-excavation architectural planning, because any chisel mistake in monolithic rock-cut excavation could never be undone.',
+        features: [
+          'Largest single monolithic rock excavation on Earth, carved strictly from the roof downward.',
+          'Massive plinth supported visually by a procession of life-sized carved stone elephants.',
+          'Twin freestanding 15-meter victory pillars (Dhvajastambhas) carved from the same parent rock.',
+          'Multi-level galleries, Nandi pavilion, and rock bridges linking surrounding cliff chambers.'
+        ],
+        sculptures: 'The iconic panel of Ravana Shaking Mount Kailasa (Ravana Anugraha), monumental Shaivite panels, and narrative bands of the Ramayana and Mahabharata.',
+        significance: 'A jewel of UNESCO World Heritage Ellora Caves and one of humanity’s supreme achievements in subtractive structural engineering.',
+        timeline: [
+          { year: 'c. 756–773 CE', text: 'Excavated under Rashtrakuta ruler Krishna I.' },
+          { year: '9th–10th C.', text: 'Subsequent carvings and narrative panels refined inside galleries.' },
+          { year: '1983', text: 'Designated a UNESCO World Heritage Site (Ellora Caves).' }
+        ],
+        gallery: [
+          { src: wiki('Kailasa_temple_overview,_Ellora.jpg', 1100), caption: 'Aerial perspective showing the entire temple carved out of solid cliff rock.' },
+          { src: wiki('Ellora_cave16_001.jpg', 1100), caption: 'Freestanding Dhvajastambha, elephant plinth, and sculpted shikhara.' }
+        ]
+      },
+      {
+        id: 'jantar-mantar',
+        name: 'Jantar Mantar',
+        location: 'Jaipur, Rajasthan',
+        state: 'Rajasthan',
+        categories: ['Astronomy', 'Architecture', 'Monuments'],
+        builtBy: 'Maharaja Sawai Jai Singh II',
+        period: '1724–1734 CE (18th Century)',
+        technique: 'Astronomical Masonry Architecture · Local Sandstone, Marble & Brass',
+        coords: { left: 36, top: 34.5 },
+        image: wiki('Samrat_Yantra_at_Jantar_Mantar_Jaipur.jpg', 1100),
+        fallback: wiki('Jantar_Mantar,_Jaipur.jpg', 1100),
+        shortDesc: 'An open-air royal astronomical observatory housing 19 giant masonry instruments, including the 27-meter Samrat Yantra sundial.',
+        about: 'Constructed by astronomer-king Maharaja Sawai Jai Singh II, Jantar Mantar in Jaipur translates spherical astronomy into monumental stone and marble architecture. Its 19 instruments allow naked-eye measurement of time, planetary altitudes, azimuths, eclipses, and zodiacal coordinates.',
+        history: 'Recognizing that small brass astrolabes suffered from mechanical wear and reading errors, Sawai Jai Singh II built five massive masonry observatories across northern India—with Jaipur being the largest and best preserved.',
+        features: [
+          'Brihat Samrat Yantra: 27-meter equinoctial sundial accurate to approximately 2 seconds.',
+          'Jai Prakash Yantra: Twin sunken marble hemispheres mapping the inverted sky.',
+          'Ram Yantra: Twin cylindrical instruments tracking celestial altitude and azimuth.',
+          'Rashivalaya Yantra: Twelve zodiacal instruments aligned to ecliptic coordinates.'
+        ],
+        sculptures: 'Precision marble dial engravings, calibrated brass graduated arcs, and harmonious geometric forms fusing science with Rajput aesthetics.',
+        significance: 'A UNESCO World Heritage Site showcasing the synthesis of classical Indian Siddhantic astronomy, observational rigor, and monumental civil engineering.',
+        timeline: [
+          { year: '1724–1734 CE', text: 'Built by Maharaja Sawai Jai Singh II in newly founded Jaipur.' },
+          { year: '1901', text: 'Comprehensive restoration replacing worn lime dials with white marble.' },
+          { year: '2010', text: 'Inscribed as a UNESCO World Heritage Site.' }
+        ],
+        gallery: [
+          { src: wiki('Samrat_Yantra_at_Jantar_Mantar_Jaipur.jpg', 1100), caption: 'The monumental Samrat Yantra inclined precisely to Jaipur’s latitude.' },
+          { src: wiki('Jantar_Mantar,_Jaipur.jpg', 1100), caption: 'Panoramic ensemble of astronomical masonry instruments.' }
+        ]
+      },
+      {
+        id: 'kirti-stambha',
+        name: 'Kirti Stambha',
+        location: 'Chittorgarh, Rajasthan',
+        state: 'Rajasthan',
+        categories: ['Architecture', 'Monuments'],
+        builtBy: 'Jeeja Bhagerwala (Jain Merchant Patron, Bagherwal Community)',
+        period: 'c. 12th–13th Century CE',
+        technique: 'Solanki / Maru-Gurjara Architecture · Carved Sandstone',
+        coords: { left: 32.5, top: 39.5 },
+        image: wiki('Kirti_Stambha,_Chittorgarh.jpg', 1100),
+        fallback: wiki('Kirti_Stambha_Chittorgarh.jpg', 1100),
+        shortDesc: 'A soaring 22-meter, seven-storey Tower of Fame at Chittorgarh Fort adorned with Jain Tirthankara sculptures and an open pillared pavilion.',
+        about: 'Rising 22 meters above the historic plateau of Chittorgarh Fort, Kirti Stambha (Tower of Fame) is dedicated to Adinatha, the first Jain Tirthankara. Built in refined Solanki (Maru-Gurjara) style, its seven tapering storeys culminate in an airy open-pillared observation pavilion.',
+        history: 'Commissioned by Jain merchant Jeeja Bhagerwala during the 12th–13th century, the tower celebrates Jain spiritual devotion and stands within the legendary Hill Fort of Chittorgarh alongside other storied Rajput landmarks.',
+        features: [
+          'Seven-storey tapering sandstone tower reaching 22 meters in height.',
+          'Narrow internal 54-step spiral staircase ascending to the top pillared pavilion.',
+          'Exterior facades richly embellished with niches, projecting balconies, and geometric moldings.',
+          'Engineered center-of-gravity distribution ensuring multi-century vertical stability.'
+        ],
+        sculptures: 'Standing figures of Adinatha, Digambara Jain Tirthankaras, ornate lotus capitals, and carved decorative friezes along every storey.',
+        significance: 'Forms part of the UNESCO World Heritage Hill Forts of Rajasthan, demonstrating mastery in tall-tower masonry and Jain sculptural art.',
+        timeline: [
+          { year: '12th–13th C.', text: 'Constructed by Jeeja Bhagerwala in honor of Tirthankara Adinatha.' },
+          { year: '15th–16th C.', text: 'Stood proudly amid Chittorgarh’s historic architectural landscape.' },
+          { year: '2013', text: 'Included in the UNESCO Hill Forts of Rajasthan World Heritage Site.' }
+        ],
+        gallery: [
+          { src: wiki('Kirti_Stambha,_Chittorgarh.jpg', 1100), caption: 'Seven-storey carved sandstone Kirti Stambha rising inside Chittorgarh Fort.' },
+          { src: wiki('Kirti_Stambha_Chittorgarh.jpg', 1100), caption: 'Detailed exterior niches and top open-pillared mandapa.' }
+        ]
+      },
+      {
+        id: 'bara-imambara',
+        name: 'Bara Imambara',
+        location: 'Lucknow, Uttar Pradesh',
+        state: 'Uttar Pradesh',
+        categories: ['Architecture', 'Monuments'],
+        builtBy: 'Nawab Asaf-ud-Daula (Architect: Kifayatullah)',
+        period: '1784–1791 CE (18th Century)',
+        technique: 'Awadhi Mughal Architecture · Lakhori Brick, Lime Mortar & Interlocking Vaults',
+        coords: { left: 53.5, top: 34 },
+        image: wiki('Bara_Imambara_Lucknow.jpg', 1100),
+        fallback: wiki('Bara_Imambara,_Lucknow.jpg', 1100),
+        shortDesc: 'An 18th-century engineering marvel boasting one of the world’s largest unsupported arched halls and the legendary Bhool Bhulaiya labyrinth.',
+        about: 'Commissioned in 1784 by Nawab Asaf-ud-Daula as a monumental famine-relief project to provide dignified employment, the Bara Imambara is celebrated for its staggering central hall—nearly 50 meters long and 15 meters high—built without a single supporting pillar or iron beam.',
+        history: 'Designed by master architect Kifayatullah, construction combined brick-and-lime mortar engineering with ingenious hollow weight-reducing corridors above the hall, famously known as the Bhool Bhulaiya (labyrinth), which lighten the load on the vast vaulted ceiling.',
+        features: [
+          'Enormous central vaulted hall (~50 m × 16 m × 15 m) engineered entirely without pillars, wood, or iron beams.',
+          'Bhool Bhulaiya: 489 identical doorways and 1,000+ interconnected passages engineered to reduce roof weight.',
+          'Remarkable acoustic corridors capable of transmitting whispers across long hall distances.',
+          'Shahi Baoli (five-storey royal stepwell) integrating passive cooling and optical water-reflection surveillance.'
+        ],
+        sculptures: 'Refined Awadhi stucco arabesques, scalloped cusped arches, ornamental fish emblems (Mahi Maratib), and symmetrical courtyard gateways.',
+        significance: 'A pinnacle of structural load distribution, famine-relief civic architecture, and acoustic vaulting in late-medieval North India.',
+        timeline: [
+          { year: '1784 CE', text: 'Construction initiated by Nawab Asaf-ud-Daula as a famine-relief project.' },
+          { year: '1791 CE', text: 'Completion of the central hall, Bhool Bhulaiya, Asfi Mosque, and Shahi Baoli.' },
+          { year: 'Present', text: 'Iconic heritage landmark of Lucknow and Awadhi architectural engineering.' }
+        ],
+        gallery: [
+          { src: wiki('Bara_Imambara_Lucknow.jpg', 1100), caption: 'Grand Awadhi facade and ceremonial courtyard of Bara Imambara.' },
+          { src: wiki('Bara_Imambara,_Lucknow.jpg', 1100), caption: 'Symmetrical scalloped arches and rooftop pavilions.' }
+        ]
+      },
+      {
+        id: 'dashavatara-deogarh',
+        name: 'Dashavatara Temple',
+        location: 'Deogarh, Uttar Pradesh',
+        state: 'Uttar Pradesh',
+        categories: ['Temples', 'Architecture'],
+        builtBy: 'Gupta Empire Patronage',
+        period: 'c. 500–525 CE (Early 6th Century)',
+        technique: 'Early Classical Nagara Architecture · Carved Reddish-Buff Sandstone',
+        coords: { left: 48, top: 39.5 },
+        image: wiki('Deogarh_Dashavatara_Temple.jpg', 1100),
+        fallback: wiki('Dashavatara_Temple_Deogarh.jpg', 1100),
+        shortDesc: 'A foundational 6th-century Gupta-era sandstone temple representing one of the earliest surviving Panchayatan Nagara temple prototypes.',
+        about: 'Overlooking the Betwa River valley at Deogarh, the Dashavatara Temple is one of the earliest surviving stone Hindu temples in northern India. Standing on a sculpted high plinth with four corner subsidiary shrines (Panchayatan layout), it marks the historic birth of the curved Nagara shikhara.',
+        history: 'Built during the Golden Age of the Gupta Empire (early 6th century CE), this Vishnu temple bridged early flat-roofed shrines and the towering medieval Nagara temples of central and northern India.',
+        features: [
+          'One of the earliest surviving examples of a terraced Panchayatan (five-shrine) layout.',
+          'Pioneering curvilinear Nagara shikhara tower prototype built in precision-dressed sandstone.',
+          'Ornate sanctum doorway framed by Ganga and Yamuna river-goddess reliefs and guardians.',
+          'Three large recessed exterior wall niches (rathikas) framing monumental Vaishnava relief panels.'
+        ],
+        sculptures: 'Masterpiece Gupta relief panels: Sheshashayi Vishnu (Vishnu reclining on Ananta), Gajendra Moksha, and Nara-Narayana in meditation.',
+        significance: 'A cornerstone monument of Indian art history, setting canonical standards for Nagara architecture and serene Gupta sculptural proportion.',
+        timeline: [
+          { year: 'c. 500–525 CE', text: 'Constructed during the late Gupta Golden Age in sandstone.' },
+          { year: '1875', text: 'Documented in detail by archaeologist Alexander Cunningham.' },
+          { year: 'Present', text: 'Protected ASI monument celebrated as an icon of classical Gupta art.' }
+        ],
+        gallery: [
+          { src: wiki('Deogarh_Dashavatara_Temple.jpg', 1100), caption: 'Early Nagara sandstone sanctum elevated on its sculpted terrace.' },
+          { src: wiki('Sheshashayi_Vishnu_panel,_Dashavatara_Temple,_Deogarh.jpg', 1000), caption: 'Famous Gupta-era Sheshashayi Vishnu sculptural panel.' }
+        ]
+      }
+    ];
+
+    // ---------- DATA: 6 ARCHITECTURAL TRADITIONS ----------
+    const ARCHITECTURES = [
+      {
+        id: 'hoysala',
+        title: 'Hoysala Architecture',
+        era: '11th–14th Century CE · Karnataka',
+        monuments: 'Keshava Temple (Somnathapura) · Chennakeshava Temple (Belur)',
+        image: wiki('Somanathapura_Keshava_Temple.jpg', 1000),
+        fallback: wiki('Chennakesava_Temple,_Belur.jpg', 1000),
+        desc: 'Renowned for star-shaped (stellate) plans atop raised jagati platforms, Hoysala architects worked with soft chloritic schist (soapstone) that hardens upon exposure to air—allowing jewel-like precision, lathe-turned glossy pillars, and signed sculptural panels.',
+        highlights: ['16- and 32-pointed stellate geometry', 'Lathe-turned mirror-polished pillars', 'Madanika bracket sculptures & narrative friezes']
+      },
+      {
+        id: 'dravidian',
+        title: 'Dravidian Architecture',
+        era: '6th–17th Century CE · South India',
+        monuments: 'Sundara Kamakshi Temple · Virupaksha Temple',
+        image: wiki('Kanchipuram_Kamakshi_Amman_Temple.jpg', 1000),
+        fallback: wiki('Virupaksha_Temple_Hampi.jpg', 1000),
+        desc: 'Defined by soaring pyramidal entrance towers (gopurams), concentric walled courtyards (prakaras), sacred temple water tanks, and pillared mandapas engineered to harmonize climate control, acoustics, and ceremonial processions.',
+        highlights: ['Multi-tiered pyramidal gopurams', 'Concentric Agamic courtyard geometry', 'Integrated temple tanks (pushkarinis)']
+      },
+      {
+        id: 'vijayanagara',
+        title: 'Vijayanagara Architecture',
+        era: '14th–16th Century CE · Deccan',
+        monuments: 'Vijaya Vittala Temple · Virupaksha Temple (Hampi)',
+        image: wiki('Vittala_temple_stone_chariot.jpg', 1000),
+        fallback: wiki('Hampi_chariot.jpg', 1000),
+        desc: 'A grand imperial synthesis uniting Chola, Hoysala, Pandya, and Chalukya aesthetics in monumental hard granite. Celebrated for colossal pillared halls, sculpted rearing yalis, chariot shrines, and acoustic musical colonnettes.',
+        highlights: ['Monolithic acoustic musical pillars', 'Iconic chariot shrines & Kalyana Mantapas', 'High-strength interlocking dry granite masonry']
+      },
+      {
+        id: 'rockcut',
+        title: 'Rock-Cut Architecture',
+        era: '3rd Century BCE – 10th Century CE · Western Deccan',
+        monuments: 'Kailasa Temple (Ellora, Maharashtra)',
+        image: wiki('Kailasa_temple_overview,_Ellora.jpg', 1000),
+        fallback: wiki('Ellora_cave16_001.jpg', 1000),
+        desc: 'Masterpieces of subtractive engineering where entire sanctuaries, multi-storey galleries, courtyards, and towering monolithic pillars were carved directly downward from living basalt mountain cliffs with zero mortar or joints.',
+        highlights: ['Top-down monolithic cliff excavation', 'Zero-error pre-excavation 3D planning', 'Seamless structural durability across millennia']
+      },
+      {
+        id: 'gupta',
+        title: 'Gupta-Era Temple Architecture',
+        era: '4th–6th Century CE · North & Central India',
+        monuments: 'Dashavatara Temple (Deogarh, Uttar Pradesh)',
+        image: wiki('Deogarh_Dashavatara_Temple.jpg', 1000),
+        fallback: wiki('Dashavatara_Temple_Deogarh.jpg', 1000),
+        desc: 'Widely regarded as the classical cradle of North Indian stone temple design, introducing the elevated Panchayatan platform, sculpted sanctum portals, serene human proportions, and the earliest prototypes of the curvilinear Nagara shikhara.',
+        highlights: ['Early Panchayatan five-shrine blueprint', 'Prototype curvilinear Nagara shikhara', 'Classical Gupta narrative relief artistry']
+      },
+      {
+        id: 'astronomical',
+        title: 'Indian Astronomical Architecture',
+        era: '18th Century CE · Rajasthan & North India',
+        monuments: 'Jantar Mantar (Jaipur, Rajasthan)',
+        image: wiki('Samrat_Yantra_at_Jantar_Mantar_Jaipur.jpg', 1000),
+        fallback: wiki('Jantar_Mantar,_Jaipur.jpg', 1000),
+        desc: 'Monumental architectural instruments calibrated directly to terrestrial latitude and celestial geometry. By scaling astronomical dials to tens of meters in stone and marble, Indian scientists achieved remarkable naked-eye observational precision.',
+        highlights: ['Latitude-aligned 27m Samrat Yantra', 'Hemispherical Jai Prakash sky projection', 'Two-second solar time resolution']
+      }
+    ];
+
+    // ---------- DATA: 10 SCULPTURES FOR GALLERY ----------
+    const SCULPTURES = [
+      {
+        title: 'Garuda — The Divine Vehicle',
+        location: 'Belur & Hampi Heritage',
+        tag: 'Vahana Iconography',
+        image: wiki('Garuda_statue_at_Chennakeshava_temple_Belur.jpg', 900),
+        fallback: wiki('Vittala_temple_stone_chariot.jpg', 900),
+        desc: 'Sculpted in reverent devotion with folded hands (anjali mudra) and outstretched wings, Garuda stands facing Vaishnava sanctums as the mighty celestial mount of Lord Vishnu.',
+        sig: 'Symbolizes speed, vigilance, loyalty, and the spiritual elevation of the devotee toward the divine.'
+      },
+      {
+        title: 'Ravana — The Mighty Devotee',
+        location: 'Kailasa Temple, Ellora',
+        tag: 'Rock-Cut Relief Masterpiece',
+        image: wiki('Ravana_shaking_Mount_Kailasa,_Ellora.jpg', 900),
+        fallback: wiki('Kailasa_temple_overview,_Ellora.jpg', 900),
+        desc: 'Carved in dramatic deep relief at Cave 16, Ellora, this iconic narrative depicts the ten-headed Ravana attempting to lift Mount Kailasa while Lord Shiva calmly restores balance with the press of his toe.',
+        sig: 'Showcases extraordinary depth-of-field rock carving and the triumph of serene cosmic equilibrium over arrogance.'
+      },
+      {
+        title: 'Celestial Maiden with Musical Instrument',
+        location: 'Chennakeshava Temple, Belur',
+        tag: 'Hoysala Madanika',
+        image: wiki('Shilabalika_at_Belur.jpg', 900),
+        fallback: wiki('Chennakesava_Temple,_Belur.jpg', 900),
+        desc: 'Part of Belur’s celebrated series of 42 Madanika (Shilabalika) bracket sculptures, portraying graceful musicians and dancers adorned with finely chiseled jewelry and rhythmic posture.',
+        sig: 'Captures medieval Indian classical music, dance mudras (Natyashastra), and astonishing soapstone lacework.'
+      },
+      {
+        title: 'Divine Mother Figure',
+        location: 'Tamil Nadu Temple Tradition',
+        tag: 'Shakti Iconography',
+        image: wiki('Kanchipuram_Kamakshi_Amman_Temple.jpg', 900),
+        fallback: wiki('Kamakshi_Amman_Temple_in_Kancheepuram,_Tamil_Nadu.jpg', 900),
+        desc: 'Revered expressions of Devi and Goddess Kamakshi embodied in serene symmetry, compassionate gaze, and intricate ornamental iconography across South Indian shrines.',
+        sig: 'Honors Shakti as the creative, nurturing, and protective cosmic energy central to Indian philosophy.'
+      },
+      {
+        title: 'Carved Stone Emblems',
+        location: 'Hoysala & Vijayanagara Temples',
+        tag: 'Royal & Sacred Insignia',
+        image: wiki('Hoysala_emblem_at_Belur.jpg', 900),
+        fallback: wiki('Somanathapura_Keshava_Temple.jpg', 900),
+        desc: 'Dynastic stone insignia—such as the famous Hoysala emblem depicting founder Sala subduing a fierce lion—crowned temple gateways and lintels across Karnataka.',
+        sig: 'Documents royal lineage, valor, and historic patronage directly in enduring architectural stone.'
+      },
+      {
+        title: 'Ornate Pillared Shrines',
+        location: 'Hampi & Somnathapura',
+        tag: 'Mandapa Architecture',
+        image: wiki('Keshava_temple_at_Somanathapura,_Mysore_district.jpg', 900),
+        fallback: wiki('Virupaksha_Temple_Hampi.jpg', 900),
+        desc: 'Hypostyle pillared halls combining structural load-bearing strength with finely turned shafts, lotus brackets, and carved narrative capitals.',
+        sig: 'Demonstrates how Indian builders transformed structural columns into expressive storytelling canvases.'
+      },
+      {
+        title: 'Musical Pillars',
+        location: 'Vijaya Vittala Temple, Hampi',
+        tag: 'Acoustic Stonework',
+        image: wiki('Vittala_Temple_Hampi_Musical_Pillars.jpg', 900),
+        fallback: wiki('Vittala_temple_stone_chariot.jpg', 900),
+        desc: 'Clustered granite shafts within the Ranga Mantapa engineered to resonate with distinct classical musical notes when tapped.',
+        sig: 'Testifies to empirical mastery of granite density, resonance frequencies, and lithophonic acoustics.'
+      },
+      {
+        title: 'Stone Chariot',
+        location: 'Vijaya Vittala Temple, Hampi',
+        tag: 'Iconic Garuda Shrine',
+        image: wiki('Vittala_temple_stone_chariot.jpg', 900),
+        fallback: wiki('Hampi_chariot.jpg', 900),
+        desc: 'An exquisite granite shrine fashioned as a ceremonial temple chariot pulled by sculpted elephants, resting on intricately carved stone wheels.',
+        sig: 'Celebrated nationwide as an enduring emblem of Vijayanagara artistic brilliance and precision stonework.'
+      },
+      {
+        title: 'Detailed Temple Carvings',
+        location: 'Somnathapura & Belur',
+        tag: 'Narrative Stone Friezes',
+        image: wiki('A_sculpture_at_the_Keshava_temple_in_Somanathapura.jpg', 900),
+        fallback: wiki('Somanathapura_Keshava_Temple.jpg', 900),
+        desc: 'Continuous horizontal sculptural registers weaving hundreds of unique elephants, cavalry, mythical Makaras, swans, and epic scenes without repetition.',
+        sig: 'Preserves visual encyclopedias of medieval attire, music, fauna, and epic literature in carved stone.'
+      },
+      {
+        title: 'Dashavatara Sculptural Panels',
+        location: 'Dashavatara Temple, Deogarh',
+        tag: 'Classical Gupta Reliefs',
+        image: wiki('Sheshashayi_Vishnu_panel,_Dashavatara_Temple,_Deogarh.jpg', 900),
+        fallback: wiki('Deogarh_Dashavatara_Temple.jpg', 900),
+        desc: 'Three monumental recessed sandstone panels—Sheshashayi Vishnu, Gajendra Moksha, and Nara-Narayana—celebrated for serene balance and fluid drapery.',
+        sig: 'Marks the golden classical benchmark of early North Indian Vaishnava stone relief sculpture.'
+      }
+    ];
+
+    // ---------- STATE ----------
+    let activeFilter = 'All';
+    let activeArch = 'hoysala';
+    let activeMapId = MONUMENTS[2].id; // Default highlight: Vijaya Vittala Temple
+    let lightboxItems = [];
+    let lightboxIndex = 0;
+    let audioCtx = null;
+
+    // ---------- MOBILE NAVIGATION ----------
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('menu-icon-open');
+    const iconClose = document.getElementById('menu-icon-close');
+
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      iconOpen.classList.toggle('hidden');
+      iconClose.classList.toggle('hidden');
+    });
+
+    document.querySelectorAll('.mobile-link').forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        iconOpen.classList.remove('hidden');
+        iconClose.classList.add('hidden');
+      });
+    });
+
+    // ---------- RENDER FILTERS & MONUMENT CARDS ----------
+    const FILTER_CATEGORIES = ['All', 'Temples', 'Architecture', 'Astronomy', 'Monuments'];
+
+    function renderFilters() {
+      const bar = document.getElementById('filter-bar');
+      bar.innerHTML = FILTER_CATEGORIES.map((cat) => {
+        const isActive = cat === activeFilter;
+        return `
+          <button
+            onclick="setFilter('${cat}')"
+            class="px-5 py-2.5 rounded-full font-display text-xs font-bold tracking-[0.15em] uppercase transition ${
+              isActive
+                ? 'bg-maroon text-gold-pale shadow-md border border-maroon'
+                : 'bg-ivory text-maroon border border-gold/45 hover:bg-maroon/10'
+            }"
+          >
+            ${cat}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function setFilter(cat) {
+      activeFilter = cat;
+      renderFilters();
+      renderMonuments();
+    }
+
+    function renderMonuments() {
+      const grid = document.getElementById('monuments-grid');
+      const filtered = activeFilter === 'All'
+        ? MONUMENTS
+        : MONUMENTS.filter((m) => m.categories.includes(activeFilter));
+
+      grid.innerHTML = filtered.map((m, idx) => `
+        <article class="heritage-card group rounded-3xl bg-ivory ornate-border overflow-hidden flex flex-col">
+          <div class="relative aspect-[16/11] overflow-hidden bg-maroon-deep cursor-pointer" onclick="openMonument('${m.id}')">
+            <img
+              src="${m.image}"
+              data-fallback="${m.fallback}"
+              alt="${m.name} — ${m.location}"
+              loading="lazy"
+              onerror="handleImgError(this, '${m.name}')"
+              class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-maroon-dark/80 via-transparent to-transparent"></div>
+            <span class="absolute top-4 left-4 px-3 py-1 rounded-full bg-maroon-dark/80 backdrop-blur-md border border-gold/45 text-[10px] font-display tracking-[0.16em] uppercase text-gold-pale">
+              ${m.location}
+            </span>
+            <span class="absolute bottom-3 right-4 font-display text-xs tracking-[0.18em] text-gold-light/90">
+              ${String(MONUMENTS.indexOf(m) + 1).padStart(2, '0')} / 10
+            </span>
+          </div>
+
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-bronze">${m.period}</p>
+              <h3 class="mt-1.5 font-display text-xl font-bold text-maroon group-hover:text-maroon-light transition cursor-pointer" onclick="openMonument('${m.id}')">
+                ${m.name}
+              </h3>
+              <p class="mt-2.5 text-sm text-ink/80 leading-relaxed">
+                ${m.shortDesc}
+              </p>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-gold/25 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                ${m.categories.slice(0, 2).map((c) => `<span class="px-2.5 py-0.5 rounded-full bg-parchment text-[10px] font-semibold text-maroon/85">${c}</span>`).join('')}
+              </div>
+              <button
+                onclick="openMonument('${m.id}')"
+                class="inline-flex items-center gap-1.5 font-display text-xs font-bold tracking-[0.14em] uppercase text-maroon hover:text-gold-bronze transition"
+              >
+                Explore More <span>→</span>
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // ---------- INDIVIDUAL MONUMENT DETAIL VIEW ----------
+    function openMonument(id) {
+      const idx = MONUMENTS.findIndex((m) => m.id === id);
+      if (idx === -1) return;
+      const m = MONUMENTS[idx];
+      const prevM = MONUMENTS[(idx - 1 + MONUMENTS.length) % MONUMENTS.length];
+      const nextM = MONUMENTS[(idx + 1) % MONUMENTS.length];
+
+      const modal = document.getElementById('monument-modal');
+      modal.innerHTML = `
+        <!-- Sticky Top Dossier Bar -->
+        <div class="sticky top-0 z-20 bg-maroon-dark/95 backdrop-blur-md border-b border-gold/30 text-ivory">
+          <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <button onclick="closeMonument()" class="inline-flex items-center gap-2 text-xs font-display font-bold tracking-[0.16em] uppercase text-gold-pale hover:text-gold-light transition">
+              ← Back to Exhibition
+            </button>
+            <span class="hidden sm:inline font-display text-xs tracking-[0.2em] uppercase text-ivory/75">
+              Monument ${String(idx + 1).padStart(2, '0')} of 10 · ${m.name}
+            </span>
+            <button onclick="closeMonument()" aria-label="Close" class="w-9 h-9 rounded-full border border-gold/45 text-gold-light hover:bg-maroon flex items-center justify-center transition">
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <!-- Hero Banner -->
+        <div class="relative h-[46vh] sm:h-[56vh] bg-maroon-dark overflow-hidden">
+          <img
+            src="${m.image}"
+            data-fallback="${m.fallback}"
+            alt="${m.name}"
+            onerror="handleImgError(this, '${m.name}')"
+            class="w-full h-full object-cover opacity-80"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-maroon-dark via-maroon-dark/45 to-transparent"></div>
+          <div class="absolute bottom-0 inset-x-0 max-w-6xl mx-auto px-4 sm:px-6 pb-10 text-ivory">
+            <span class="inline-block px-3.5 py-1 rounded-full bg-gold/25 border border-gold/55 text-[11px] font-display tracking-[0.2em] uppercase text-gold-pale mb-3">
+              ${m.location}
+            </span>
+            <h1 class="font-display text-3xl sm:text-5xl lg:text-6xl font-bold text-ivory">${m.name}</h1>
+            <p class="mt-2 font-serif italic text-lg sm:text-xl text-gold-pale/90 max-w-3xl">${m.shortDesc}</p>
+          </div>
+        </div>
+
+        <!-- Quick Facts Strip -->
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 -mt-6 relative z-10">
+          <div class="grid sm:grid-cols-3 gap-4 p-6 rounded-2xl bg-parchment ornate-border shadow-lg">
+            <div>
+              <span class="block font-display text-[10px] font-bold tracking-[0.2em] uppercase text-gold-bronze">Built By</span>
+              <p class="mt-1 text-sm font-semibold text-maroon">${m.builtBy}</p>
+            </div>
+            <div>
+              <span class="block font-display text-[10px] font-bold tracking-[0.2em] uppercase text-gold-bronze">Period of Construction</span>
+              <p class="mt-1 text-sm font-semibold text-maroon">${m.period}</p>
+            </div>
+            <div>
+              <span class="block font-display text-[10px] font-bold tracking-[0.2em] uppercase text-gold-bronze">Technique &amp; Materials</span>
+              <p class="mt-1 text-sm font-semibold text-maroon">${m.technique}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-Column Editorial Dossier -->
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 grid lg:grid-cols-12 gap-10">
+          <div class="lg:col-span-8 space-y-8">
+            <div>
+              <h2 class="font-display text-2xl font-bold text-maroon mb-3">About the Monument</h2>
+              <p class="font-serif text-xl text-ink/90 leading-relaxed">${m.about}</p>
+            </div>
+
+            <div>
+              <h2 class="font-display text-2xl font-bold text-maroon mb-3">Historical Background</h2>
+              <p class="text-base text-ink/80 leading-relaxed">${m.history}</p>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-parchment/85 ornate-border">
+              <h2 class="font-display text-xl font-bold text-maroon mb-4">Unique Architectural Features</h2>
+              <ul class="space-y-3 text-sm text-ink/85">
+                ${m.features.map((f) => `
+                  <li class="flex items-start gap-3">
+                    <span class="mt-1.5 w-2 h-2 rotate-45 bg-gold shrink-0"></span>
+                    <span>${f}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div class="p-6 rounded-2xl bg-ivory ornate-border">
+                <h3 class="font-display text-lg font-bold text-maroon mb-2">Important Sculptures &amp; Carvings</h3>
+                <p class="text-sm text-ink/80 leading-relaxed">${m.sculptures}</p>
+              </div>
+              <div class="p-6 rounded-2xl bg-maroon-dark text-ivory border border-gold/40">
+                <h3 class="font-display text-lg font-bold text-gold-light mb-2">Cultural &amp; Historical Significance</h3>
+                <p class="text-sm text-ivory/85 leading-relaxed">${m.significance}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar: Timeline & Gallery -->
+          <aside class="lg:col-span-4 space-y-8">
+            <div class="p-6 rounded-2xl bg-parchment/90 ornate-border">
+              <h3 class="font-display text-lg font-bold text-maroon mb-4">Historical Timeline</h3>
+              <div class="space-y-4 border-l-2 border-gold/60 pl-4">
+                ${m.timeline.map((t) => `
+                  <div>
+                    <span class="font-display text-xs font-bold tracking-[0.14em] uppercase text-gold-bronze">${t.year}</span>
+                    <p class="text-xs text-ink/80 mt-0.5 leading-relaxed">${t.text}</p>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div>
+              <h3 class="font-display text-lg font-bold text-maroon mb-3">Monument Gallery</h3>
+              <div class="space-y-4">
+                ${m.gallery.map((g, gIdx) => `
+                  <div onclick="openMonumentGalleryLightbox('${m.id}', ${gIdx})" class="cursor-pointer group rounded-2xl overflow-hidden ornate-border bg-parchment">
+                    <div class="aspect-[16/10] overflow-hidden bg-maroon-deep">
+                      <img
+                        src="${g.src}"
+                        data-fallback="${m.fallback}"
+                        alt="${g.caption}"
+                        onerror="handleImgError(this, '${m.name}')"
+                        class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                      />
+                    </div>
+                    <p class="p-3 text-xs text-ink/80">${g.caption}</p>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Prev / Next Monument Navigation -->
+        <div class="border-t border-gold/30 bg-parchment/80">
+          <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <button onclick="openMonument('${prevM.id}')" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-ivory ornate-border hover:border-maroon text-left transition">
+              <span class="block text-[10px] font-display uppercase tracking-[0.18em] text-gold-bronze">← Previous Monument</span>
+              <span class="font-display text-sm font-bold text-maroon">${prevM.name}</span>
+            </button>
+            <button onclick="openMonument('${nextM.id}')" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-ivory ornate-border hover:border-maroon text-right transition">
+              <span class="block text-[10px] font-display uppercase tracking-[0.18em] text-gold-bronze">Next Monument →</span>
+              <span class="font-display text-sm font-bold text-maroon">${nextM.name}</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      modal.scrollTop = 0;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMonument() {
+      document.getElementById('monument-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    // ---------- ARCHITECTURE SHOWCASE ----------
+    function renderArchitecture() {
+      const tabs = document.getElementById('architecture-tabs');
+      tabs.innerHTML = ARCHITECTURES.map((a) => `
+        <button
+          onclick="selectArchitecture('${a.id}')"
+          class="px-4 py-2.5 rounded-full font-display text-xs font-bold tracking-[0.12em] uppercase transition ${
+            a.id === activeArch
+              ? 'bg-maroon text-gold-pale shadow-md'
+              : 'bg-parchment text-maroon border border-gold/40 hover:bg-maroon/10'
+          }"
+        >
+          ${a.title}
+        </button>
+      `).join('');
+
+      const item = ARCHITECTURES.find((a) => a.id === activeArch);
+      document.getElementById('architecture-stage').innerHTML = `
+        <div class="grid lg:grid-cols-12 gap-8 items-center p-6 sm:p-8 rounded-3xl bg-parchment/90 ornate-border shadow-lg">
+          <div class="lg:col-span-6 rounded-2xl overflow-hidden aspect-[16/11] bg-maroon-deep ornate-border">
+            <img
+              src="${item.image}"
+              data-fallback="${item.fallback}"
+              alt="${item.title}"
+              onerror="handleImgError(this, '${item.title}')"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="lg:col-span-6">
+            <span class="inline-block px-3 py-1 rounded-full bg-maroon text-gold-pale font-display text-[10px] tracking-[0.18em] uppercase">
+              ${item.era}
+            </span>
+            <h3 class="mt-3 font-display text-2xl sm:text-3xl font-bold text-maroon">${item.title}</h3>
+            <p class="mt-1.5 text-xs font-semibold text-gold-bronze uppercase tracking-[0.12em]">
+              Featured In: ${item.monuments}
+            </p>
+            <p class="mt-4 font-serif text-xl text-ink/90 leading-relaxed">${item.desc}</p>
+            <div class="mt-6 space-y-2.5">
+              ${item.highlights.map((h) => `
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-ivory ornate-border text-sm text-ink/85">
+                  <span class="w-2 h-2 rotate-45 bg-gold shrink-0"></span>
+                  <span>${h}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectArchitecture(id) {
+      activeArch = id;
+      renderArchitecture();
+    }
+
+    // ---------- SCULPTURE GALLERY & LIGHTBOX ----------
+    function renderSculptures() {
+      const container = document.getElementById('sculpture-gallery');
+      container.innerHTML = SCULPTURES.map((s, idx) => `
+        <figure
+          onclick="openSculptureLightbox(${idx})"
+          class="masonry-item group cursor-pointer rounded-2xl overflow-hidden bg-maroon-deep border border-gold/30 hover:border-gold-light transition shadow-lg"
+        >
+          <div class="relative overflow-hidden bg-maroon-dark">
+            <img
+              src="${s.image}"
+              data-fallback="${s.fallback}"
+              alt="${s.title}"
+              loading="lazy"
+              onerror="handleImgError(this, '${s.title}')"
+              class="w-full h-auto object-cover group-hover:scale-105 transition duration-700"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-maroon-dark/90 via-transparent to-transparent opacity-80 group-hover:opacity-95 transition"></div>
+            <span class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-maroon-dark/80 border border-gold/45 text-[10px] font-display tracking-[0.14em] uppercase text-gold-pale">
+              ${s.tag}
+            </span>
+          </div>
+          <figcaption class="p-5">
+            <h3 class="font-display text-lg font-bold text-ivory group-hover:text-gold-light transition">${s.title}</h3>
+            <p class="text-xs text-gold-pale/75 mt-1">${s.location}</p>
+            <p class="text-xs text-ivory/75 mt-2.5 line-clamp-2 leading-relaxed">${s.desc}</p>
+          </figcaption>
+        </figure>
+      `).join('');
+    }
+
+    function openSculptureLightbox(index) {
+      lightboxItems = SCULPTURES;
+      lightboxIndex = index;
+      updateLightboxView();
+      document.getElementById('lightbox-modal').classList.remove('hidden');
+    }
+
+    function openMonumentGalleryLightbox(monumentId, gIdx) {
+      const m = MONUMENTS.find((item) => item.id === monumentId);
+      if (!m) return;
+      lightboxItems = m.gallery.map((g) => ({
+        title: m.name,
+        tag: m.location,
+        image: g.src,
+        fallback: m.fallback,
+        desc: g.caption,
+        sig: m.significance
+      }));
+      lightboxIndex = gIdx;
+      updateLightboxView();
+      document.getElementById('lightbox-modal').classList.remove('hidden');
+    }
+
+    function updateLightboxView() {
+      const item = lightboxItems[lightboxIndex];
+      if (!item) return;
+      const img = document.getElementById('lb-img');
+      img.dataset.triedFallback = '';
+      img.dataset.usedSvg = '';
+      img.dataset.fallback = item.fallback || '';
+      img.onerror = () => handleImgError(img, item.title);
+      img.src = item.image;
+      img.alt = item.title;
+      document.getElementById('lb-tag').textContent = item.tag || 'Exhibition View';
+      document.getElementById('lb-title').textContent = item.title;
+      document.getElementById('lb-desc').textContent = item.desc;
+      document.getElementById('lb-sig').textContent = item.sig;
+    }
+
+    function navigateLightbox(dir) {
+      if (!lightboxItems.length) return;
+      lightboxIndex = (lightboxIndex + dir + lightboxItems.length) % lightboxItems.length;
+      updateLightboxView();
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.add('hidden');
+    }
+
+    // ---------- SCIENCE & INNOVATION INTERACTIVE LABS ----------
+    function switchLab(labId) {
+      document.querySelectorAll('.lab-panel').forEach((p) => p.classList.add('hidden'));
+      document.getElementById('lab-' + labId).classList.remove('hidden');
+
+      document.querySelectorAll('.lab-tab').forEach((btn) => {
+        const active = btn.dataset.lab === labId;
+        btn.className = 'lab-tab px-5 py-3 rounded-full font-display text-xs font-bold tracking-[0.14em] uppercase transition ' +
+          (active ? 'bg-maroon text-gold-pale shadow-md' : 'bg-parchment text-maroon border border-gold/45 hover:bg-maroon/10');
+      });
+    }
+
+    // Lab 1: Samrat Yantra
+    function updateSamrat(val) {
+      const hour = parseFloat(val);
+      const wholeH = Math.floor(hour);
+      const mins = Math.round((hour - wholeH) * 60);
+      const ampm = wholeH >= 12 ? 'PM' : 'AM';
+      const dispH = wholeH % 12 === 0 ? 12 : wholeH % 12;
+      document.getElementById('solar-time-display').textContent =
+        `${dispH}:${String(mins).padStart(2, '0')} ${ampm}`;
+
+      // Map 6..18 to PI..0 radians along upper semicircle
+      const progress = (hour - 6) / 12;
+      const theta = Math.PI * (1 - progress);
+      const sunX = 210 + 160 * Math.cos(theta);
+      const sunY = 210 - 160 * Math.sin(theta);
+
+      const sunGroup = document.getElementById('samrat-sun');
+      sunGroup.innerHTML = `<circle cx="${sunX.toFixed(1)}" cy="${sunY.toFixed(1)}" r="13" fill="#F3C95D"/><circle cx="${sunX.toFixed(1)}" cy="${sunY.toFixed(1)}" r="22" fill="#F3C95D" fill-opacity="0.22"/>`;
+
+      const ray = document.getElementById('samrat-ray');
+      ray.setAttribute('x1', sunX.toFixed(1));
+      ray.setAttribute('y1', sunY.toFixed(1));
+
+      // Opposite shadow cast on opposite quadrant
+      const shadowX = 210 - (sunX - 210) * 0.65;
+      const shadowY = 205 - Math.abs(sunX - 210) * 0.12;
+      const shadow = document.getElementById('samrat-shadow');
+      shadow.setAttribute('x2', shadowX.toFixed(1));
+      shadow.setAttribute('y2', shadowY.toFixed(1));
+
+      const alt = Math.round(Math.sin(progress * Math.PI) * 90);
+      document.getElementById('solar-angle').textContent = alt + '°';
+      document.getElementById('solar-quadrant').textContent =
+        hour < 12 ? 'Western Marble Quadrant (Morning)' : hour === 12 ? 'Solar Noon Meridian' : 'Eastern Marble Quadrant (Afternoon)';
+    }
+
+    // Lab 2: Jai Prakash & Ram Yantra
+    function updateCelestial() {
+      const alt = parseFloat(document.getElementById('jp-alt').value);
+      const az = parseFloat(document.getElementById('jp-az').value);
+      const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+      const dirLabel = dirs[Math.round(az / 45) % 8];
+
+      document.getElementById('jp-alt-val').textContent = alt + '°';
+      document.getElementById('jp-az-val').textContent = `${az}° (${dirLabel})`;
+
+      // Higher altitude => shadow closer to center
+      const radius = ((90 - alt) / 90) * 102;
+      const rad = ((az - 90) * Math.PI) / 180;
+      const x = 200 + radius * Math.cos(rad);
+      const y = 140 + radius * Math.sin(rad);
+
+      document.getElementById('jp-vector').setAttribute('x2', x.toFixed(1));
+      document.getElementById('jp-vector').setAttribute('y2', y.toFixed(1));
+      document.getElementById('jp-dot').setAttribute('cx', x.toFixed(1));
+      document.getElementById('jp-dot').setAttribute('cy', y.toFixed(1));
+    }
+
+    // Lab 3: Virupaksha Pinhole Camera
+    function updatePinhole(val) {
+      const v = parseInt(val, 10);
+      const blurPx = ((v - 1) * 0.95).toFixed(1);
+      document.getElementById('pinhole-projection').style.filter = `blur(${blurPx}px)`;
+      const label = v <= 3 ? 'Sharp Focus (Optimal Slit)' : v <= 6 ? 'Softening Projection' : 'Wide Opening (Blurred Image)';
+      document.getElementById('aperture-label').textContent = label;
+    }
+
+    // Lab 4: Musical Pillars (Web Audio API Lithophone Synthesizer)
+    function strikePillar(idx, freq, label) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!audioCtx && AudioContextClass) audioCtx = new AudioContextClass();
+      if (audioCtx) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+
+        // Fundamental tone + metallic stone overtone
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc1.type = 'triangle';
+        osc2.type = 'sine';
+        osc1.frequency.setValueAtTime(freq, now);
+        osc2.frequency.setValueAtTime(freq * 2.756, now); // stone bar overtone ratio
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(0.32, now + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0008, now + 1.45);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 1.5);
+        osc2.stop(now + 1.5);
+      }
+
+      const el = document.getElementById('pillar-' + idx);
+      if (el) {
+        el.classList.remove('pillar-active');
+        void el.offsetWidth;
+        el.classList.add('pillar-active');
+      }
+      document.getElementById('pillar-status').textContent = 'Resonating: ' + label;
+    }
+
+    function playRagaDemo() {
+      const sequence = [
+        [0, 261.63, 'Sa (Shadja)'],
+        [1, 293.66, 'Re (Rishabha)'],
+        [2, 329.63, 'Ga (Gandhara)'],
+        [4, 392.00, 'Pa (Panchama)'],
+        [5, 440.00, 'Dha (Dhaivata)'],
+        [6, 493.88, 'Ni (Nishada)'],
+        [4, 392.00, 'Pa (Panchama)'],
+        [2, 329.63, 'Ga (Gandhara)'],
+        [0, 261.63, 'Sa (Shadja)']
+      ];
+      sequence.forEach(([idx, freq, name], step) => {
+        setTimeout(() => strikePillar(idx, freq, name), step * 340);
+      });
+    }
+
+    // ---------- INTERACTIVE HERITAGE MAP ----------
+    function renderMap() {
+      const markersEl = document.getElementById('map-markers');
+      markersEl.innerHTML = MONUMENTS.map((m) => {
+        const isActive = m.id === activeMapId;
+        return `
+          <button
+            onclick="selectMapMonument('${m.id}')"
+            title="${m.name} — ${m.location}"
+            style="left: ${m.coords.left}%; top: ${m.coords.top}%;"
+            class="group absolute -translate-x-1/2 -translate-y-1/2 focus:outline-none z-10"
+          >
+            ${isActive ? '<span class="absolute inset-0 rounded-full bg-gold-light" style="animation: pulseRing 1.8s infinite;"></span>' : ''}
+            <span class="relative flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 transition-transform ${
+              isActive
+                ? 'bg-gold-light border-ivory scale-125 shadow-[0_0_14px_rgba(223,189,105,0.95)]'
+                : 'bg-maroon border-gold-light hover:scale-125'
+            }">
+              <span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-maroon-dark' : 'bg-gold-light'}"></span>
+            </span>
+            <span class="pointer-events-none opacity-0 group-hover:opacity-100 transition absolute left-1/2 -translate-x-1/2 -top-9 whitespace-nowrap px-2.5 py-1 rounded-md bg-ivory text-maroon text-[10px] font-display font-bold shadow-md">
+              ${m.name}
+            </span>
+          </button>
+        `;
+      }).join('');
+
+      const activeM = MONUMENTS.find((m) => m.id === activeMapId) || MONUMENTS[0];
+      document.getElementById('map-spotlight').innerHTML = `
+        <div class="rounded-3xl bg-ivory ornate-border overflow-hidden shadow-xl">
+          <div class="relative aspect-[16/10] bg-maroon-deep overflow-hidden">
+            <img
+              src="${activeM.image}"
+              data-fallback="${activeM.fallback}"
+              alt="${activeM.name}"
+              onerror="handleImgError(this, '${activeM.name}')"
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-maroon-dark/85 via-transparent to-transparent"></div>
+            <span class="absolute bottom-3 left-4 px-3 py-1 rounded-full bg-gold/25 border border-gold/55 text-[10px] font-display tracking-[0.18em] uppercase text-gold-pale">
+              ${activeM.location}
+            </span>
+          </div>
+          <div class="p-6 sm:p-7">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-bronze">${activeM.period}</p>
+            <h3 class="mt-1 font-display text-2xl font-bold text-maroon">${activeM.name}</h3>
+            <p class="mt-3 text-sm text-ink/80 leading-relaxed">${activeM.shortDesc}</p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <button
+                onclick="openMonument('${activeM.id}')"
+                class="px-6 py-3 rounded-full bg-maroon text-gold-pale font-display text-xs font-bold tracking-[0.15em] uppercase hover:bg-maroon-light transition"
+              >
+                Open Full Monument Dossier →
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectMapMonument(id) {
+      activeMapId = id;
+      renderMap();
+    }
+
+    // ---------- KEYBOARD ACCESSIBILITY ----------
+    document.addEventListener('keydown', (e) => {
+      const lbOpen = !document.getElementById('lightbox-modal').classList.contains('hidden');
+      const mOpen = !document.getElementById('monument-modal').classList.contains('hidden');
+
+      if (e.key === 'Escape') {
+        if (lbOpen) closeLightbox();
+        else if (mOpen) closeMonument();
+      } else if (lbOpen && e.key === 'ArrowRight') {
+        navigateLightbox(1);
+      } else if (lbOpen && e.key === 'ArrowLeft') {
+        navigateLightbox(-1);
+      }
+    });
+
+    // ---------- INITIALIZE MUSEUM ----------
+    renderFilters();
+    renderMonuments();
+    renderArchitecture();
+    renderSculptures();
+    renderMap();
+    switchLab('samrat');
+    updateSamrat(10.5);
+    updateCelestial();
+  </script>
 </body>
 </html>
